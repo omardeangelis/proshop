@@ -1,13 +1,84 @@
-body {
+* {
   margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
-    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
-    sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+  padding: 0;
+  box-sizing: border-box;
 }
 
-code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
-    monospace;
+:root {
+  --bg-color: #eff1f8;
+  --color-primary: #212121;
+  --amber-600: #ffb300;
+  --cyan-50: #e0f7fa;
+  /* General */
+  --btn-radius: 18px;
+  --transition: all 175ms ease;
+  --light-shadow: 1px 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+body {
+  background-color: var(--bg-color);
+  font-family: "Roboto", sans-serif;
+}
+
+main {
+  margin: 1rem;
+  min-height: 80vh;
+}
+
+a {
+  text-decoration: none;
+  color: inherit;
+}
+
+.section-verticale {
+  display: grid;
+  gap: 1rem;
+}
+
+.box-link {
+  display: none;
+}
+
+.icon-white {
+  color: var(--bg-color);
+}
+
+@media screen and (min-width: 992px) {
+  .menu-button {
+    display: none;
+  }
+
+  .box-link {
+    display: block;
+  }
+}
+
+/*SINGLE PRODUCT PAGE STYLE*/
+.single-product {
+  display: grid;
+  gap: 2rem;
+}
+
+.info-container {
+  display: grid;
+  gap: 1rem;
+}
+
+@media screen and (min-width: 992px) {
+  .single-product {
+    grid-template-columns: repeat(12, 1fr);
+  }
+
+  .img-container {
+    grid-column: 1/6;
+    grid-row: 1/1;
+  }
+
+  .info-container {
+    margin-left: 4rem;
+    grid-column: 6/12;
+    grid-row: 1/1;
+    width: 80%;
+    height: fit-content;
+  }
 }
