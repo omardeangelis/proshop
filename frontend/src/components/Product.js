@@ -48,6 +48,9 @@ const Wrapper = styled(Card)`
     background-color: var(--color-primary);
     color: var(--bg-color);
     transform: scale(1.01);
+    .product-rate-num {
+      color: var(--bg-color);
+    }
   }
 `;
 
