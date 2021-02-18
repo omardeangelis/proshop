@@ -1,7 +1,8 @@
 import React from "react";
 import SinglePageProduct from "../components/SinglePageProduct";
+import useFetch from "../custom/useFetch";
+
 import { useParams, Link as RouterLink } from "react-router-dom";
-import products from "../products";
 import Typography from "@material-ui/core/Typography";
 import IconButton from "@material-ui/core/IconButton";
 import KeyboardBackspaceRoundedIcon from "@material-ui/icons/KeyboardBackspaceRounded";
@@ -10,8 +11,10 @@ import styled from "styled-components";
 const ProductScreen = () => {
   const { id } = useParams();
 
-  const product = products.find((el) => el._id === id);
-
+  const { data: product, isLoading } = useFetch(`/api/products/${id}`);
+  if (isLoading) {
+    return <h4>...Loading</h4>;
+  }
   return (
     <Wrapper>
       <div className="back-container">
