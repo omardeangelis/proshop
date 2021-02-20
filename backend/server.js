@@ -1,27 +1,42 @@
 import express from "express";
 import dotenv from "dotenv";
-import products from "./data/products.js";
+import connectDB from "./config/db.js";
+import colors from "colors";
+import morgan from "morgan";
+import products from "./routes/products.js";
+import errorHandler from "./middleware/errorHandler.js";
 
+//Per accedere alle env variabless
 dotenv.config();
 
 const app = express();
+
+//Connetto Database
+connectDB();
+
+if (process.env.NODE_ENV === "development") {
+  app.use(morgan("dev"));
+}
 
 app.get("/", (req, res) => {
   res.send("API is Runnign");
 });
 
-app.get("/api/products", (req, res) => {
-  res.json(products);
-});
+//Route delegato al products router
+app.use("/api/products", products);
 
-app.get("/api/products/:id", (req, res) => {
-  const product = products.find((product) => product._id === req.params.id);
-  res.json(product);
-});
+//Middleware che gestisce errori di default
+app.use(errorHandler);
 
 const PORT = process.env.PORT || 5000;
 
-app.listen(
+const server = app.listen(
   PORT,
   console.log(`Server Running on port ${PORT} in ${process.env.NODE_ENV}`)
 );
+
+//Quando ci sono problemi l'app crasha invece di continuare a funzionare
+process.on("unhandledRejection", (err, promise) => {
+  console.log(`Errore: ${err.message}`);
+  server.close(() => process.exit(1));
+});

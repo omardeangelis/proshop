@@ -8,7 +8,9 @@ const useFetch = (url) => {
   const getProducts = async (url) => {
     setIsLoading(true);
     try {
-      const { data } = await axios.get(url);
+      const {
+        data: { data },
+      } = await axios.get(url);
       setData(data);
       setIsLoading(false);
     } catch (error) {

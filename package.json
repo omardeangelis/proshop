@@ -7,13 +7,19 @@
   "scripts": {
     "server": "nodemon backend/server",
     "client": "npm start --prefix frontend",
-    "dev": "concurrently \"npm run server\" \"npm run client\""
+    "dev": "concurrently \"npm run server\" \"npm run client\"",
+    "importData": "node backend/seeder -i",
+    "destroyData": "node backend/seeder -d"
   },
   "author": "Omar De Angelis",
   "license": "MIT",
   "dependencies": {
+    "bcryptjs": "^2.4.3",
+    "colors": "^1.4.0",
     "dotenv": "^8.2.0",
-    "express": "^4.17.1"
+    "express": "^4.17.1",
+    "mongoose": "^5.11.17",
+    "morgan": "^1.10.0"
   },
   "devDependencies": {
     "concurrently": "^5.3.0"
