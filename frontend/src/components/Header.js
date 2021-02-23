@@ -11,6 +11,8 @@ import PersonIcon from "@material-ui/icons/Person";
 import { Box, Icon } from "@material-ui/core";
 import Container from "@material-ui/core/Container";
 import { Link as RouterLink } from "react-router-dom";
+import { useSelector } from "react-redux";
+import Badge from "@material-ui/core/Badge";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -35,6 +37,7 @@ const useStyles = makeStyles((theme) => ({
 
 const Header = () => {
   const classes = useStyles();
+  const { cartItems } = useSelector((state) => state.cart);
 
   return (
     <header>
@@ -62,9 +65,13 @@ const Header = () => {
             <Box className="box-link">
               <Button color="inherit" component={RouterLink} to="/cart">
                 {" "}
-                <Icon className={classes.menuIcon}>
+                <Badge
+                  badgeContent={cartItems.length}
+                  color="secondary"
+                  className={classes.menuIcon}
+                >
                   <ShoppingCartIcon />
-                </Icon>{" "}
+                </Badge>{" "}
                 Cart
               </Button>
               <Button color="inherit" component={RouterLink} to="/login">

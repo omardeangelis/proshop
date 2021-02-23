@@ -7,7 +7,6 @@ import IconButton from "@material-ui/core/IconButton";
 import AddRoundedIcon from "@material-ui/icons/AddRounded";
 import RemoveRoundedIcon from "@material-ui/icons/RemoveRounded";
 import RemoveCircleIcon from "@material-ui/icons/RemoveCircle";
-import { toggleCartItemQty } from "../reducers/actions/cartActions";
 const CartItem = ({
   countInStock,
   image,
@@ -29,7 +28,7 @@ const CartItem = ({
             {name}
           </Typography>
           <Typography variant="button" className="price">
-            {price} €
+            {(Number(price) * Number(qty)).toFixed(2)} €
           </Typography>
         </div>
         <div className="cart-btn-section">
@@ -73,6 +72,7 @@ const Wrapper = styled(Paper)`
   padding: 1rem;
   gap: 1rem;
   display: grid;
+  height: fit-content;
   grid-template-columns: 1fr 2fr;
   .img {
     width: 100%;
@@ -88,11 +88,12 @@ const Wrapper = styled(Paper)`
       gap: 0.5rem;
       .title {
         line-height: 1;
+        text-transform: uppercase;
       }
       .price {
         font-size: 1.1em;
         font-weight: 700;
-        color: var(--grey-light-800);
+        color: var(--dark-grey);
       }
     }
   }
