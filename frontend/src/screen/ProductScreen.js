@@ -1,7 +1,6 @@
 import React from "react";
 import SinglePageProduct from "../components/SinglePageProduct";
 import useFetch from "../custom/useFetch";
-
 import { useParams, Link as RouterLink } from "react-router-dom";
 import Typography from "@material-ui/core/Typography";
 import IconButton from "@material-ui/core/IconButton";

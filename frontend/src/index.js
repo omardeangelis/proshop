@@ -2,14 +2,15 @@ import React from "react";
 import ReactDOM from "react-dom";
 import "./index.css";
 import ThemeWrapper from "./theme";
-
 import App from "./App";
+import { Provider } from "react-redux";
+import store from "./store";
 
 ReactDOM.render(
-  <React.StrictMode>
+  <Provider store={store}>
     <ThemeWrapper>
       <App />
     </ThemeWrapper>
-  </React.StrictMode>,
+  </Provider>,
   document.getElementById("root")
 );

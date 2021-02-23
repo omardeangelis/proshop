@@ -65,7 +65,7 @@ const Header = () => {
                 <Icon className={classes.menuIcon}>
                   <ShoppingCartIcon />
                 </Icon>{" "}
-                Shop
+                Cart
               </Button>
               <Button color="inherit" component={RouterLink} to="/login">
                 <Icon className={classes.menuIcon}>

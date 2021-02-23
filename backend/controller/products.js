@@ -1,6 +1,5 @@
 import asyncHandler from "../middleware/asyncErrorHandler.js";
 import Product from "../models/Product.js";
-import ErrorReponse from "../utils/ErrorResponse.js";
 import ErrorResponse from "../utils/ErrorResponse.js";
 
 //desc      Fetch all data
@@ -23,7 +22,7 @@ export const getSingleProduct = asyncHandler(async (req, res, next) => {
 
   if (!product) {
     return next(
-      new ErrorReponse(`Nessun prodotto con id: ${req.params.id}`, 404)
+      new ErrorResponse(`Nessun prodotto con id: ${req.params.id}`, 404)
     );
   }
   res.status(200).json({
