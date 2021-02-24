@@ -1,15 +1,16 @@
 import mongoose from "mongoose";
 import bcrypt from "bcryptjs";
+import jwt from "jsonwebtoken";
 
 const UserSchema = new mongoose.Schema(
   {
     name: {
       type: String,
-      required: true,
+      required: [true, "inserisci un nome"],
     },
     email: {
       type: String,
-      required: true,
+      required: [true, "inserisci una mail"],
       match: [
         /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/,
         "Inserisci una mail valida",
@@ -18,7 +19,8 @@ const UserSchema = new mongoose.Schema(
     },
     password: {
       type: String,
-      required: true,
+      required: [true, "inserisci una password"],
+      select: false,
     },
     isAdmin: {
       type: Boolean,
@@ -53,7 +55,14 @@ UserSchema.pre("save", async function (next) {
 
 //Model Method per verificare se la password inserita è corretta
 UserSchema.methods.validatePassword = async function (enteredPassword) {
-  return await bycrypt.compare(enteredPassword, this.password);
+  return await bcrypt.compare(enteredPassword, this.password);
+};
+
+//Crea un token nuovo
+UserSchema.methods.getSignedToken = function () {
+  return jwt.sign({ id: this._id }, process.env.JWT_SECRET, {
+    expiresIn: process.env.JWT_EXPIRES_IN,
+  });
 };
 
 const User = mongoose.model("User", UserSchema);
