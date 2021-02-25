@@ -2,8 +2,10 @@ import express from "express";
 import dotenv from "dotenv";
 import connectDB from "./config/db.js";
 import colors from "colors";
+import cookieParser from "cookie-parser";
 import morgan from "morgan";
 import products from "./routes/products.js";
+import auth from "./routes/auth.js";
 import errorHandler from "./middleware/errorHandler.js";
 
 //Per accedere alle env variabless
@@ -18,12 +20,19 @@ if (process.env.NODE_ENV === "development") {
   app.use(morgan("dev"));
 }
 
+app.use(express.json());
+
+app.use(cookieParser());
+
 app.get("/", (req, res) => {
   res.send("API is Runnign");
 });
 
 //Route delegato al products router
 app.use("/api/products", products);
+
+//Route delegato al auht router
+app.use("/api/auth", auth);
 
 //Middleware che gestisce errori di default
 app.use(errorHandler);
