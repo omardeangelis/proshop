@@ -5,7 +5,6 @@ const errorHandler = async (err, req, res, next) => {
 
   console.log(err.name, err.code);
 
-  console.log(err);
   if (err.name === "CastError") {
     const message =
       "Id per la Risorsa non valido. Fornisci un ID formattato correttamente";
@@ -18,7 +17,6 @@ const errorHandler = async (err, req, res, next) => {
   if (err.name === "ValidationError") {
     const message = Object.values(err.errors)
       .map((errorMsg) => {
-        console.log(errorMsg);
         return `${errorMsg.properties.message}`;
       })
       .join()
