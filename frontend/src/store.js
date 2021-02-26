@@ -3,12 +3,13 @@ import thunk from "redux-thunk";
 import { composeWithDevTools } from "redux-devtools-extension";
 import { productListReducer } from "./reducers/productReducers";
 import { cartReducer } from "./reducers/cartReducer";
-import { loginReducer } from "./reducers/loginReducer";
+import { loginReducer, registerReducer } from "./reducers/loginReducer";
 
 const reducer = combineReducers({
   productList: productListReducer,
   cart: cartReducer,
   login: loginReducer,
+  register: registerReducer,
 });
 
 const cartItemsFromStorage = localStorage.getItem("cartItems")

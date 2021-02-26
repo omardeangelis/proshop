@@ -1,9 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import {
-  tryLoginUser,
-  userLogout,
-  newLoginAttempt,
+  userRegister,
+  newRegisterAttempt,
 } from "../reducers/actions/loginActions";
 import { Link as RouterLink } from "react-router-dom";
 //Material UI Import
@@ -48,22 +47,29 @@ const LoginScreen = ({ location, history }) => {
   const redirect = location.search.split("=")[1] || "/";
   const dispatch = useDispatch();
   //Global App State
-  const { isLogin, error } = useSelector((state) => state.login);
-
+  const { registerError } = useSelector((state) => state.register);
+  const { isLogin } = useSelector((state) => state.login);
   //State per controllare input
   const [inputState, setInputState] = useState({
     name: "",
     email: "",
     password: "",
+    confirmPassword: "",
   });
+
+  //Messaggio di errore di compilazione
+  const [message, setMessage] = useState("");
 
   //Material Ui Styled Classes
   const classes = useStyles();
 
   //Modifica dei valori all'interno degli input
   const handleChange = (e) => {
-    if (error) {
-      dispatch(newLoginAttempt());
+    if (registerError) {
+      dispatch(newRegisterAttempt());
+    }
+    if (message) {
+      setMessage("");
     }
     const { name, value } = e.target;
     setInputState({ ...inputState, [name]: value });
@@ -72,55 +78,45 @@ const LoginScreen = ({ location, history }) => {
   //Gestisce l'invio del form
   const handleSubmit = (e) => {
     e.preventDefault();
-    const cleanInput = { ...inputState };
+    if (inputState.password === inputState.confirmPassword) {
+      const cleanInput = { ...inputState };
 
-    for (const [key, value] of Object.entries(cleanInput)) {
-      if (!value) {
-        delete cleanInput[key];
+      for (const [key, value] of Object.entries(cleanInput)) {
+        if (!value) {
+          delete cleanInput[key];
+        }
       }
-    }
 
+      delete cleanInput["confirmPassword"];
+      dispatch(userRegister(...Object.values(cleanInput)));
+    } else {
+      setMessage("Password e password di conferma sono diverse");
+    }
     setInputState({
+      name: "",
       email: "",
       password: "",
+      confirmPassword: "",
     });
-
-    dispatch(tryLoginUser(...Object.values(cleanInput)));
   };
 
   useEffect(() => {
-    if (error) {
+    if (registerError) {
       const timer = setTimeout(() => {
-        dispatch(newLoginAttempt());
+        dispatch(newRegisterAttempt());
+        if (message) {
+          setMessage("");
+        }
       }, 3000);
       return () => clearTimeout(timer);
     }
-  }, [error, dispatch]);
+  }, [registerError, dispatch, message]);
 
-  // useEffect(() => {
-  //   if (isLogin) {
-  //     history.push(redirect);
-  //   }
-  // }, [isLogin, history, redirect]);
-  if (isLogin) {
-    return (
-      <Container component="main" maxWidth="xs">
-        <div className={classes.paper}>
-          <div className={classes.form}>
-            <Button
-              fullWidth
-              variant="contained"
-              color="primary"
-              className={classes.submit}
-              onClick={() => dispatch(userLogout())}
-            >
-              Logout
-            </Button>
-          </div>
-        </div>
-      </Container>
-    );
-  }
+  //   useEffect(() => {
+  //     if (isLogin) {
+  //       history.push(redirect);
+  //     }
+  //   }, [isLogin, history, redirect]);
   return (
     <Container component="main" maxWidth="xs">
       <div className={classes.paper}>
@@ -128,9 +124,22 @@ const LoginScreen = ({ location, history }) => {
           <LockOutlinedIcon />
         </Avatar>
         <Typography component="h1" variant="h5">
-          Accedi
+          Registrati
         </Typography>
         <form className={classes.form} onSubmit={handleSubmit}>
+          <TextField
+            variant="outlined"
+            margin="normal"
+            required
+            fullWidth
+            id="name"
+            label="Il Tuo Nome"
+            name="name"
+            value={inputState.name}
+            onChange={handleChange}
+            autoComplete="name"
+          />
+
           <TextField
             variant="outlined"
             margin="normal"
@@ -157,6 +166,18 @@ const LoginScreen = ({ location, history }) => {
             value={inputState.password}
             onChange={handleChange}
           />
+          <TextField
+            variant="outlined"
+            margin="normal"
+            required
+            fullWidth
+            name="confirmPassword"
+            label="Password"
+            type="password"
+            id="confirmPassword"
+            value={inputState.confirmPassword}
+            onChange={handleChange}
+          />
           <FormControlLabel
             control={<Checkbox value="remember" color="primary" />}
             label="Remember me"
@@ -169,7 +190,7 @@ const LoginScreen = ({ location, history }) => {
             color="primary"
             className={classes.submit}
           >
-            Accedi
+            Registrati
           </Button>
 
           <Grid container>
@@ -179,23 +200,27 @@ const LoginScreen = ({ location, history }) => {
               </Link>
             </Grid>
             <Grid item>
-              <Link
-                component={RouterLink}
-                href="#"
-                variant="body2"
-                to="/register"
-              >
-                {"Nuovo Utente?"} <u>Registrati</u>
+              <Link component={RouterLink} href="#" variant="body2" to="/login">
+                {"Hai già un account?"} <u>Accedi</u>
               </Link>
             </Grid>
           </Grid>
-          {error && (
+          {registerError && (
             <Alert
               variant="outlined"
               severity="error"
               className={classes.alert}
             >
-              {error}
+              {registerError}
+            </Alert>
+          )}
+          {message && (
+            <Alert
+              variant="outlined"
+              severity="error"
+              className={classes.alert}
+            >
+              {message}
             </Alert>
           )}
         </form>
