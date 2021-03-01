@@ -48,6 +48,10 @@ a {
   color: var(--bg-color);
 }
 
+.btn {
+  border-radius: var(--btn-radius) !important;
+}
+
 /* GENERAL MEDIA QUERY*/
 @media screen and (min-width: 992px) {
   .btn-icon {

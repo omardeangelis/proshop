@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import AppBar from "@material-ui/core/AppBar";
 import Toolbar from "@material-ui/core/Toolbar";
@@ -6,7 +6,12 @@ import Typography from "@material-ui/core/Typography";
 import Button from "@material-ui/core/Button";
 import IconButton from "@material-ui/core/IconButton";
 import MenuIcon from "@material-ui/icons/Menu";
+import Menu from "@material-ui/core/Menu";
+import MenuItem from "@material-ui/core/MenuItem";
 import ShoppingCartIcon from "@material-ui/icons/ShoppingCart";
+import ArrowDropDownIcon from "@material-ui/icons/ArrowDropDown";
+import SupervisorAccountIcon from "@material-ui/icons/SupervisorAccount";
+import ExitToAppIcon from "@material-ui/icons/ExitToApp";
 import PersonIcon from "@material-ui/icons/Person";
 import { Box, Icon } from "@material-ui/core";
 import Container from "@material-ui/core/Container";
@@ -33,11 +38,25 @@ const useStyles = makeStyles((theme) => ({
   menuIcon: {
     marginRight: theme.spacing(2),
   },
+  menu: {},
+  menuItemIcon: {
+    marginRight: theme.spacing(2),
+  },
 }));
 
 const Header = () => {
   const classes = useStyles();
   const { cartItems } = useSelector((state) => state.cart);
+  const { isLogin, isAdmin } = useSelector((state) => state.login);
+  const [anchorEl, setAnchorEl] = useState(null);
+
+  const handleClick = (event) => {
+    setAnchorEl(event.currentTarget);
+  };
+
+  const handleClose = () => {
+    setAnchorEl(null);
+  };
 
   return (
     <header>
@@ -74,12 +93,72 @@ const Header = () => {
                 </Badge>{" "}
                 Cart
               </Button>
-              <Button color="inherit" component={RouterLink} to="/login">
-                <Icon className={classes.menuIcon}>
-                  <PersonIcon />
-                </Icon>
-                Login
-              </Button>
+              {!isLogin ? (
+                <Button color="inherit" component={RouterLink} to="/login">
+                  <Icon className={classes.menuIcon}>
+                    <PersonIcon />
+                  </Icon>
+                  Login
+                </Button>
+              ) : (
+                <>
+                  <Button
+                    color="inherit"
+                    aria-controls="simple-menu"
+                    aria-haspopup="true"
+                    onClick={handleClick}
+                  >
+                    User
+                    <Icon className={classes.menuIcon}>
+                      <ArrowDropDownIcon />
+                    </Icon>
+                  </Button>
+                  <Menu
+                    className={classes.menu}
+                    id="simple-menu"
+                    anchorEl={anchorEl}
+                    keepMounted
+                    open={Boolean(anchorEl)}
+                    onClose={handleClose}
+                  >
+                    <MenuItem
+                      className={classes.menu}
+                      onClick={handleClose}
+                      component={RouterLink}
+                      to="/profile"
+                    >
+                      <Icon className={classes.menuItemIcon}>
+                        <PersonIcon />
+                      </Icon>
+                      Profile
+                    </MenuItem>
+                    {isAdmin && (
+                      <MenuItem
+                        className={classes.menu}
+                        onClick={handleClose}
+                        component={RouterLink}
+                        to="/admin"
+                      >
+                        <Icon className={classes.menuItemIcon}>
+                          <SupervisorAccountIcon />
+                        </Icon>
+                        Admin
+                      </MenuItem>
+                    )}
+                    <MenuItem
+                      className={classes.menu}
+                      onClick={handleClose}
+                      component={RouterLink}
+                      to="/logout"
+                    >
+                      <Icon className={classes.menuItemIcon}>
+                        <ExitToAppIcon />
+                      </Icon>
+                      Logout
+                    </MenuItem>
+                  </Menu>
+                </>
+              )}
             </Box>
           </Toolbar>
         </Container>

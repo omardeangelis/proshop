@@ -17,6 +17,7 @@ const sendCookieResponse = (user, res, statusCode) => {
     .json({
       success: true,
       token,
+      isAdmin: user.isAdmin,
     });
 };
 
