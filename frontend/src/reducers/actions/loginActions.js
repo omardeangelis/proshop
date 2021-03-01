@@ -9,6 +9,13 @@ import {
   NEW_REGISTER_ATTEMPT,
   NEW_LOGIN_ATTEMPT,
   USER_LOGOUT_REQUEST,
+  PROFILE_REQUEST_FAILED,
+  PROFILE_REQUEST_STARTED,
+  PROFILE_REQUEST_SUCCESS,
+  UPDATE_PROFILE_REQUEST_STARTED,
+  UPDATE_PROFILE_REQUEST_SUCCESS,
+  UPDATE_PROFILE_REQUEST_FAILED,
+  PROFILE_REQUEST_RESET,
 } from "../constants/loginConstants";
 
 //User fa il login tramita la Login Screen
@@ -28,7 +35,7 @@ export const tryLoginUser = (email, password) => async (dispatch) => {
         },
       }
     );
-    dispatch({ type: LOGIN_REQUEST_SUCCESS });
+    dispatch({ type: LOGIN_REQUEST_SUCCESS, payload: data.isAdmin });
     localStorage.setItem("isLogin", "true");
     localStorage.setItem("isAdmin", JSON.stringify(data.isAdmin));
   } catch (error) {
@@ -42,11 +49,6 @@ export const tryLoginUser = (email, password) => async (dispatch) => {
 //Elimino messaggio di errore
 export const newLoginAttempt = () => async (dispatch) => {
   dispatch({ type: NEW_LOGIN_ATTEMPT });
-};
-
-//Elimino messaggio di errore
-export const newRegisterAttempt = () => async (dispatch) => {
-  dispatch({ type: NEW_REGISTER_ATTEMPT });
 };
 
 ////////////////////////////////////////////////////////////////////////////////////////
@@ -76,7 +78,6 @@ export const userRegister = (name, email, password) => async (dispatch) => {
         },
       }
     );
-    console.log(data);
     dispatch({ type: REGISTER_REQUEST_SUCCESS });
     localStorage.setItem("isLogin", "true");
     localStorage.setItem("isAdmin", JSON.stringify(data.isAdmin));
@@ -84,6 +85,58 @@ export const userRegister = (name, email, password) => async (dispatch) => {
   } catch (error) {
     dispatch({
       type: REGISTER_REQUEST_FAILED,
+      payload: error.response.data.error,
+    });
+  }
+};
+
+//Elimino messaggio di errore
+export const newRegisterAttempt = () => async (dispatch) => {
+  dispatch({ type: NEW_REGISTER_ATTEMPT });
+};
+
+////////////////////////////////////////////////////////////////////////////////////////
+
+export const fetchProfileData = () => async (dispatch) => {
+  dispatch({ type: PROFILE_REQUEST_STARTED });
+  try {
+    const {
+      data: { data },
+    } = await axios.get("/api/auth/me");
+    dispatch({ type: PROFILE_REQUEST_SUCCESS, payload: data });
+  } catch (error) {
+    dispatch({
+      type: PROFILE_REQUEST_FAILED,
+      payload: error.response.data.error,
+    });
+  }
+};
+
+export const resetUserProfileInfo = () => async (dispatch) => {
+  dispatch({ type: PROFILE_REQUEST_RESET });
+};
+
+////////////////////////////////////////////////////////////////////////////////////////
+
+export const updateProfile = (name, email) => async (dispatch) => {
+  dispatch({ type: UPDATE_PROFILE_REQUEST_STARTED });
+  try {
+    const {
+      data: { data },
+    } = await axios.put(
+      "/api/auth/updateinfo",
+      { name, email },
+      {
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }
+    );
+    dispatch({ type: UPDATE_PROFILE_REQUEST_SUCCESS, payload: data });
+    dispatch({ type: PROFILE_REQUEST_RESET });
+  } catch (error) {
+    dispatch({
+      type: UPDATE_PROFILE_REQUEST_FAILED,
       payload: error.response.data.error,
     });
   }

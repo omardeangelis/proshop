@@ -2,7 +2,6 @@ import React, { useState, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import {
   tryLoginUser,
-  userLogout,
   newLoginAttempt,
 } from "../reducers/actions/loginActions";
 import { Link as RouterLink } from "react-router-dom";
@@ -48,7 +47,7 @@ const LoginScreen = ({ location, history }) => {
   const redirect = location.search.split("=")[1] || "/";
   const dispatch = useDispatch();
   //Global App State
-  const { isLogin, error } = useSelector((state) => state.login);
+  const { isLogin, error, isLoading } = useSelector((state) => state.login);
 
   //State per controllare input
   const [inputState, setInputState] = useState({
@@ -97,28 +96,17 @@ const LoginScreen = ({ location, history }) => {
     }
   }, [error, dispatch]);
 
-  // useEffect(() => {
-  //   if (isLogin) {
-  //     history.push(redirect);
-  //   }
-  // }, [isLogin, history, redirect]);
-  if (isLogin) {
+  useEffect(() => {
+    if (isLogin) {
+      history.push(redirect);
+    }
+  }, [isLogin, history, redirect]);
+
+  if (isLoading) {
     return (
-      <Container component="main" maxWidth="xs">
-        <div className={classes.paper}>
-          <div className={classes.form}>
-            <Button
-              fullWidth
-              variant="contained"
-              color="primary"
-              className={classes.submit}
-              onClick={() => dispatch(userLogout())}
-            >
-              Logout
-            </Button>
-          </div>
-        </div>
-      </Container>
+      <Typography variant="h4" align="center">
+        Loading....
+      </Typography>
     );
   }
   return (

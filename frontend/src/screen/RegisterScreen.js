@@ -112,11 +112,11 @@ const LoginScreen = ({ location, history }) => {
     }
   }, [registerError, dispatch, message]);
 
-  //   useEffect(() => {
-  //     if (isLogin) {
-  //       history.push(redirect);
-  //     }
-  //   }, [isLogin, history, redirect]);
+  useEffect(() => {
+    if (isLogin) {
+      history.push(redirect);
+    }
+  }, [isLogin, history, redirect]);
   return (
     <Container component="main" maxWidth="xs">
       <div className={classes.paper}>

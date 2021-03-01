@@ -5,6 +5,9 @@ import ProductScreen from "./screen/ProductScreen";
 import CartScreen from "./screen/CartScreen";
 import LoginScreen from "./screen/LoginScreen";
 import RegisterScreen from "./screen/RegisterScreen";
+import LogoutScreen from "./screen/LogoutScreen";
+import UserProfileScreen from "./screen/UserProfileScreen";
+
 import Container from "@material-ui/core/Container";
 import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 
@@ -20,6 +23,8 @@ function App() {
             <Route path="/cart/:id?" exact component={CartScreen} />
             <Route path="/login" exact component={LoginScreen} />
             <Route path="/register" exact component={RegisterScreen} />
+            <Route path="/logout" exact component={LogoutScreen} />
+            <Route path="/profile" exact component={UserProfileScreen} />
           </Switch>
         </Container>
       </main>
