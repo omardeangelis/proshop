@@ -8,6 +8,7 @@ import {
   registerReducer,
   getProfileReducer,
   updateProfileReducer,
+  updtateUserPasswordReducer,
 } from "./reducers/loginReducer";
 
 const reducer = combineReducers({
@@ -17,6 +18,7 @@ const reducer = combineReducers({
   register: registerReducer,
   profile: getProfileReducer,
   updateProfile: updateProfileReducer,
+  updatePassword: updtateUserPasswordReducer,
 });
 
 const cartItemsFromStorage = localStorage.getItem("cartItems")

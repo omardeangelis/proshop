@@ -175,6 +175,7 @@ const LoginScreen = ({ location, history }) => {
             label="Password"
             type="password"
             id="confirmPassword"
+            autoComplete="current-password"
             value={inputState.confirmPassword}
             onChange={handleChange}
           />

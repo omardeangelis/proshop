@@ -16,6 +16,11 @@ import {
   UPDATE_PROFILE_REQUEST_SUCCESS,
   UPDATE_PROFILE_REQUEST_FAILED,
   PROFILE_REQUEST_RESET,
+  UPDATE_PASSWORD_REQUEST_STARTED,
+  UPDATE_PASSWORD_REQUEST_SUCCESS,
+  UPDATE_PASSWORD_REQUEST_FAILED,
+  UPDATE_PASSWORD_POST_SUCCESS,
+  UPDATE_PROFILE_POST_SUCCESS,
 } from "../constants/loginConstants";
 
 //User fa il login tramita la Login Screen
@@ -60,6 +65,8 @@ export const userLogout = () => async (dispatch) => {
   localStorage.removeItem("isAdmin");
 };
 
+////////////////////////////////////////////////////////////////////////////////////////
+
 //User si registra tramita la Register Screen
 export const userRegister = (name, email, password) => async (dispatch) => {
   dispatch({ type: REGISTER_REQUEST_STARTED });
@@ -90,6 +97,8 @@ export const userRegister = (name, email, password) => async (dispatch) => {
   }
 };
 
+////////////////////////////////////////////////////////////////////////////////////////
+
 //Elimino messaggio di errore
 export const newRegisterAttempt = () => async (dispatch) => {
   dispatch({ type: NEW_REGISTER_ATTEMPT });
@@ -111,6 +120,8 @@ export const fetchProfileData = () => async (dispatch) => {
     });
   }
 };
+
+////////////////////////////////////////////////////////////////////////////////////////
 
 export const resetUserProfileInfo = () => async (dispatch) => {
   dispatch({ type: PROFILE_REQUEST_RESET });
@@ -140,4 +151,41 @@ export const updateProfile = (name, email) => async (dispatch) => {
       payload: error.response.data.error,
     });
   }
+};
+
+////////////////////////////////////////////////////////////////////////////////////////
+export const profileUpdateSuccess = () => async (dispatch) => {
+  dispatch({ type: UPDATE_PROFILE_POST_SUCCESS });
+};
+
+////////////////////////////////////////////////////////////////////////////////////////
+
+export const updatePassword = (currentPassword, newPassword) => async (
+  dispatch
+) => {
+  dispatch({ type: UPDATE_PASSWORD_REQUEST_STARTED });
+  try {
+    await axios.put(
+      "/api/auth/updatepassword",
+      { currentPassword, newPassword },
+      {
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }
+    );
+
+    dispatch({ type: UPDATE_PASSWORD_REQUEST_SUCCESS });
+  } catch (error) {
+    console.log(error.response.data.error);
+    dispatch({
+      type: UPDATE_PASSWORD_REQUEST_FAILED,
+      payload: error.response.data.error,
+    });
+  }
+};
+
+////////////////////////////////////////////////////////////////////////////////////////
+export const passwordUpdateSuccess = () => async (dispatch) => {
+  dispatch({ type: UPDATE_PASSWORD_POST_SUCCESS });
 };
