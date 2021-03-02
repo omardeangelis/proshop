@@ -33,12 +33,8 @@ const UserSchema = new mongoose.Schema(
       required: true,
       default: false,
     },
-    isActiveConfirmationToken: {
-      type: String,
-    },
-    isActiveConfirmationTokenExpire: {
-      type: Date,
-    },
+    isActiveToken: String,
+    isActiveTokenExpire: Date,
   },
   {
     timestamps: true,
@@ -82,14 +78,16 @@ UserSchema.methods.getSignedToken = function () {
 };
 
 //Create NewActiveMailConfirmation
-UserSchema.methods.createRegisterToken = function () {
+UserSchema.methods.createRegisterToken = async function () {
   const responseToken = crypto.randomBytes(20).toString("hex");
-  this.isActiveConfirmationToken = crypto
+  this.isActiveToken = crypto
     .createHash("sha256")
     .update(responseToken)
     .digest("hex");
 
-  this.isActiveConfirmationTokenExpire = new Date(Date.now() + 60 * 60 * 1000);
+  this.isActiveTokenExpire = new Date(Date.now() + 60 * 60 * 1000);
+  await this.save();
+
   return responseToken;
 };
 
