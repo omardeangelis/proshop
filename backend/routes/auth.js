@@ -5,6 +5,7 @@ import {
   getMe,
   updatePassword,
   updateUserInfo,
+  logoutUser,
 } from "../controller/auth.js";
 import { authRouteValidator } from "../middleware/authValidator.js";
 const router = express.Router();
@@ -17,5 +18,6 @@ router.use(authRouteValidator);
 router.get("/me", getMe);
 router.put("/updateinfo", updateUserInfo);
 router.put("/updatepassword", updatePassword);
+router.get("/logout", logoutUser);
 
 export default router;

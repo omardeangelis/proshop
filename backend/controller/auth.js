@@ -1,6 +1,7 @@
 import User from "../models/User.js";
 import ErrorResponse from "../utils/ErrorResponse.js";
 import asyncHandler from "../middleware/asyncErrorHandler.js";
+import sendMail from "../utils/sendMail.js";
 
 //Funzione per rispondere con il Token/inserirlo nel Cookie
 const sendCookieResponse = (user, res, statusCode) => {
@@ -26,8 +27,21 @@ const sendCookieResponse = (user, res, statusCode) => {
 //Access    Public
 export const createNewUser = asyncHandler(async (req, res, next) => {
   const user = await User.create(req.body);
+  const responseToken = user.createRegisterToken();
+  const resetUrl = `${req.protocol}://localhost:3000/resetpassword/${responseToken}`;
 
-  sendCookieResponse(user, res, 201);
+  try {
+    await sendMail({
+      to: req.body.email,
+      subject: "Conferma Registrazione",
+      text: `conferma l'iscrizione a proShop. Link di Conferma: \n\n  ${resetUrl}`,
+    });
+    sendCookieResponse(user, res, 201);
+  } catch (error) {
+    console.log(error);
+    await User.findByIdAndRemove(user._id);
+    next(new ErrorResponse("impossibile inviare mail", 500));
+  }
 });
 
 //desc      Login user
@@ -126,4 +140,16 @@ export const updatePassword = asyncHandler(async (req, res, next) => {
   await user.save();
 
   sendCookieResponse(user, res, 200);
+});
+
+//desc      User ottiene le sue info personali
+//Route     GET /api/auth/logout
+//Access    Private
+export const logoutUser = asyncHandler(async (req, res, next) => {
+  res
+    .cookie("token", "none", {
+      expires: new Date(Date.now() + 10 * 1000),
+      httpOnly: true,
+    })
+    .json({ success: true, data: {} });
 });
