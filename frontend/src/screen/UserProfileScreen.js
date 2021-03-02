@@ -14,7 +14,9 @@ import {
   fetchProfileData,
   resetUserProfileInfo,
   updateProfile,
+  profileUpdateSuccess,
   updatePassword,
+  passwordUpdateSuccess,
 } from "../reducers/actions/loginActions";
 
 const useStyles = makeStyles((theme) => ({
@@ -43,7 +45,12 @@ const UserProfileScreen = () => {
   const classes = useStyles();
   const dispatch = useDispatch();
   const { user } = useSelector((state) => state.profile);
-  const { error } = useSelector((state) => state.updateProfile);
+  const { error, success: infoSuccessUpdate } = useSelector(
+    (state) => state.updateProfile
+  );
+  const { error: passwordUpdateError, success } = useSelector(
+    (state) => state.updatePassword
+  );
 
   const [inputState, setInputState] = useState({
     name: "",
@@ -52,11 +59,16 @@ const UserProfileScreen = () => {
     nuovaPassword: "",
   });
 
+  //State da utilizzare in caso di cambio password corretto
+  const [changeOpenState, setChangeOpenState] = useState("");
+
+  //Controlla submit del form per le info
   const handleSubmit = (e) => {
     e.preventDefault();
     dispatch(updateProfile(inputState.name, inputState.email));
   };
 
+  //Gestisce il submit del cambio password
   const handlePasswordSubmit = (e) => {
     e.preventDefault();
     dispatch(updatePassword(inputState.nuovaPassword, inputState.password));
@@ -73,6 +85,7 @@ const UserProfileScreen = () => {
     setInputState({ ...inputState, [name]: value });
   };
 
+  //Fetcha dati del profilo
   useEffect(() => {
     if (
       user === null ||
@@ -82,21 +95,53 @@ const UserProfileScreen = () => {
       dispatch(fetchProfileData());
     } else {
       setInputState({
+        ...inputState,
         name: user.name,
         email: user.email,
       });
       return () => dispatch(resetUserProfileInfo());
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [dispatch, user]);
 
+  useEffect(() => {
+    if (success) {
+      setInputState({ ...inputState, password: "", nuovaPassword: "" });
+      setChangeOpenState("passwordPanel");
+      const successTimer = setTimeout(() => {
+        dispatch(passwordUpdateSuccess());
+        setChangeOpenState("");
+      }, 3000);
+      return () => {
+        clearTimeout(successTimer);
+      };
+    }
+    if (infoSuccessUpdate) {
+      setChangeOpenState("infoPanel");
+      const successTimer = setTimeout(() => {
+        dispatch(profileUpdateSuccess());
+        setChangeOpenState("");
+      }, 3000);
+      return () => {
+        clearTimeout(successTimer);
+      };
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [success, infoSuccessUpdate, dispatch]);
   return (
     <Wrapper>
       <Typography variant="h4">Il TUO PROFILO</Typography>
       <div className="user-update-container">
         <div className="user-info">
           <AccordionContainer
+            isDefaultOpen
+            changeOpenState={changeOpenState === "infoPanel"}
             title="User Info"
-            description="Modifica nome ed email"
+            description={`${
+              infoSuccessUpdate
+                ? "informazioni modificate"
+                : "Modifica nome e email"
+            }`}
           >
             <div className={classes.paper}>
               <Avatar className={classes.avatar}>
@@ -156,8 +201,12 @@ const UserProfileScreen = () => {
           {/* Modifica Password From */}
 
           <AccordionContainer
+            changeOpenState={changeOpenState === "passwordPanel"}
             title="Password"
-            description="Cambia la tua password"
+            description={`${
+              success ? "password modificata" : "Cambia la tua password"
+            }`}
+            onClick={() => setChangeOpenState(false)}
           >
             <div className={classes.paper}>
               <Avatar className={classes.avatar}>
@@ -194,13 +243,13 @@ const UserProfileScreen = () => {
                   value={inputState.nuovaPassword}
                   onChange={handleChange}
                 />
-                {error && (
+                {passwordUpdateError && (
                   <Alert
                     variant="outlined"
                     severity="error"
                     className={classes.alert}
                   >
-                    {error}
+                    {passwordUpdateError}
                   </Alert>
                 )}
                 <Button

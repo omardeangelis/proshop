@@ -19,6 +19,8 @@ import {
   UPDATE_PASSWORD_REQUEST_STARTED,
   UPDATE_PASSWORD_REQUEST_SUCCESS,
   UPDATE_PASSWORD_REQUEST_FAILED,
+  UPDATE_PASSWORD_POST_SUCCESS,
+  UPDATE_PROFILE_POST_SUCCESS,
 } from "../constants/loginConstants";
 
 //User fa il login tramita la Login Screen
@@ -152,6 +154,11 @@ export const updateProfile = (name, email) => async (dispatch) => {
 };
 
 ////////////////////////////////////////////////////////////////////////////////////////
+export const profileUpdateSuccess = () => async (dispatch) => {
+  dispatch({ type: UPDATE_PROFILE_POST_SUCCESS });
+};
+
+////////////////////////////////////////////////////////////////////////////////////////
 
 export const updatePassword = (currentPassword, newPassword) => async (
   dispatch
@@ -176,4 +183,9 @@ export const updatePassword = (currentPassword, newPassword) => async (
       payload: error.response.data.error,
     });
   }
+};
+
+////////////////////////////////////////////////////////////////////////////////////////
+export const passwordUpdateSuccess = () => async (dispatch) => {
+  dispatch({ type: UPDATE_PASSWORD_POST_SUCCESS });
 };
