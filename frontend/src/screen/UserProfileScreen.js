@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
+import { Link as RouterLink } from "react-router-dom";
 import styled from "styled-components";
 import Typography from "@material-ui/core/Typography";
 import PersonIcon from "@material-ui/icons/Person";
@@ -9,6 +10,7 @@ import Avatar from "@material-ui/core/Avatar";
 import Button from "@material-ui/core/Button";
 import TextField from "@material-ui/core/TextField";
 import AccordionContainer from "../components/ui/Accordion";
+import { AlertTitle } from "@material-ui/lab";
 import { makeStyles } from "@material-ui/core/styles";
 import {
   fetchProfileData,
@@ -38,6 +40,9 @@ const useStyles = makeStyles((theme) => ({
   },
   alert: {
     marginTop: theme.spacing(2),
+  },
+  infoAlert: {
+    border: "1px solid var(--blue-200)",
   },
 }));
 
@@ -75,12 +80,6 @@ const UserProfileScreen = () => {
   };
 
   const handleChange = (e) => {
-    // if (registerError) {
-    //   dispatch(newRegisterAttempt());
-    // }
-    // if (message) {
-    //   setMessage("");
-    // }
     const { name, value } = e.target;
     setInputState({ ...inputState, [name]: value });
   };
@@ -264,6 +263,18 @@ const UserProfileScreen = () => {
               </form>
             </div>
           </AccordionContainer>
+          {user && !user.isActive && (
+            <Alert severity="info" className={classes.infoAlert}>
+              <AlertTitle>Attiva il tuo profilo</AlertTitle>
+              Per completare i pagamenti conferma il tuo account{" "}
+              <RouterLink to="/activeuser">
+                {" "}
+                <strong>
+                  <u>premendo qui</u>
+                </strong>
+              </RouterLink>
+            </Alert>
+          )}
         </div>
         <div className="user-actions">b</div>
       </div>
@@ -278,6 +289,10 @@ const Wrapper = styled.section`
     display: grid;
     grid-template-columns: 1.5fr 2fr;
     gap: 4rem;
+  }
+  .user-info {
+    display: grid;
+    gap: 2rem;
   }
 `;
 

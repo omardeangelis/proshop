@@ -11,6 +11,8 @@ import {
   updtateUserPasswordReducer,
 } from "./reducers/loginReducer";
 
+import { sendActivationTokenReducer } from "./reducers/validationReducers";
+
 const reducer = combineReducers({
   productList: productListReducer,
   cart: cartReducer,
@@ -19,6 +21,7 @@ const reducer = combineReducers({
   profile: getProfileReducer,
   updateProfile: updateProfileReducer,
   updatePassword: updtateUserPasswordReducer,
+  sendUserValidationToken: sendActivationTokenReducer,
 });
 
 const cartItemsFromStorage = localStorage.getItem("cartItems")

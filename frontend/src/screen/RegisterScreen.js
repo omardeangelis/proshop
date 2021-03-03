@@ -18,6 +18,7 @@ import LockOutlinedIcon from "@material-ui/icons/LockOutlined";
 import Typography from "@material-ui/core/Typography";
 import { makeStyles } from "@material-ui/core/styles";
 import Container from "@material-ui/core/Container";
+import Loading from "../components/ui/Loading";
 
 const useStyles = makeStyles((theme) => ({
   paper: {
@@ -47,7 +48,9 @@ const LoginScreen = ({ location, history }) => {
   const redirect = location.search.split("=")[1] || "/";
   const dispatch = useDispatch();
   //Global App State
-  const { registerError } = useSelector((state) => state.register);
+  const { registerError, success, isLoading } = useSelector(
+    (state) => state.register
+  );
   const { isLogin } = useSelector((state) => state.login);
   //State per controllare input
   const [inputState, setInputState] = useState({
@@ -100,6 +103,7 @@ const LoginScreen = ({ location, history }) => {
     });
   };
 
+  //Dopo 3 secondi elimina il messaggio di errore
   useEffect(() => {
     if (registerError) {
       const timer = setTimeout(() => {
@@ -112,11 +116,17 @@ const LoginScreen = ({ location, history }) => {
     }
   }, [registerError, dispatch, message]);
 
+  //Redirect dell'User dopo il register
   useEffect(() => {
-    if (isLogin) {
-      history.push(redirect);
+    if (isLogin && success) {
+      const timer = setTimeout(() => {
+        dispatch(newRegisterAttempt());
+        history.push(redirect);
+      }, 5000);
+      return () => clearTimeout(timer);
     }
-  }, [isLogin, history, redirect]);
+  }, [isLogin, history, redirect, success, dispatch]);
+
   return (
     <Container component="main" maxWidth="xs">
       <div className={classes.paper}>
@@ -215,6 +225,17 @@ const LoginScreen = ({ location, history }) => {
               {registerError}
             </Alert>
           )}
+          {success && (
+            <Alert
+              variant="outlined"
+              severity="success"
+              className={classes.alert}
+            >
+              {
+                "Registrato! Conferma la mail per poter completare i tuoi acquisti"
+              }
+            </Alert>
+          )}
           {message && (
             <Alert
               variant="outlined"
@@ -226,6 +247,7 @@ const LoginScreen = ({ location, history }) => {
           )}
         </form>
       </div>
+      <Loading isOpen={isLoading} />
     </Container>
   );
 };
