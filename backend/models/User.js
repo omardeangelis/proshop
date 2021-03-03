@@ -1,6 +1,7 @@
 import mongoose from "mongoose";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
+import crypto from "crypto";
 
 const UserSchema = new mongoose.Schema(
   {
@@ -27,6 +28,15 @@ const UserSchema = new mongoose.Schema(
       required: true,
       default: false,
     },
+    isActive: {
+      type: Boolean,
+      required: true,
+      default: false,
+    },
+    isActiveToken: String,
+    isActiveTokenExpire: Date,
+    resetPasswordToken: String,
+    resetPasswordTokenExpire: Date,
   },
   {
     timestamps: true,
@@ -60,9 +70,40 @@ UserSchema.methods.validatePassword = async function (enteredPassword) {
 
 //Crea un token nuovo
 UserSchema.methods.getSignedToken = function () {
-  return jwt.sign({ id: this._id }, process.env.JWT_SECRET, {
-    expiresIn: process.env.JWT_EXPIRES_IN,
-  });
+  return jwt.sign(
+    { id: this._id, isActive: this.isActive },
+    process.env.JWT_SECRET,
+    {
+      expiresIn: process.env.JWT_EXPIRES_IN,
+    }
+  );
+};
+
+//Create NewActiveMailConfirmation
+UserSchema.methods.createRegisterToken = async function () {
+  const responseToken = crypto.randomBytes(20).toString("hex");
+  this.isActiveToken = crypto
+    .createHash("sha256")
+    .update(responseToken)
+    .digest("hex");
+
+  this.isActiveTokenExpire = new Date(Date.now() + 60 * 60 * 1000);
+  await this.save();
+
+  return responseToken;
+};
+
+UserSchema.methods.createPasswordToken = async function () {
+  const responseToken = crypto.randomBytes(20).toString("hex");
+  this.resetPasswordToken = crypto
+    .createHash("sha256")
+    .update(responseToken)
+    .digest("hex");
+
+  this.resetPasswordTokenExpire = new Date(Date.now() + 60 * 10 * 1000);
+  await this.save();
+
+  return responseToken;
 };
 
 const User = mongoose.model("User", UserSchema);
