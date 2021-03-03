@@ -2,6 +2,26 @@ import User from "../models/User.js";
 import ErrorResponse from "../utils/ErrorResponse.js";
 import asyncHandler from "../middleware/asyncErrorHandler.js";
 import sendMail from "../utils/sendMail.js";
+import crypto from "crypto";
+
+// TRAFROMARE IN MIDDLEWARE
+const createAndSendValidationToken = async (user, req, res, statusCode) => {
+  const responseToken = await user.createRegisterToken();
+  const resetUrl = `${req.protocol}://localhost:3000/activeuser/${responseToken}`;
+
+  try {
+    await sendMail({
+      to: req.user ? req.user.email : req.body.email,
+      subject: "Conferma Registrazione",
+      text: `conferma l'iscrizione a proShop. Link di Conferma: \n\n  ${resetUrl}`,
+    });
+    sendCookieResponse(user, res, statusCode);
+  } catch (error) {
+    console.log(error);
+    await User.findByIdAndRemove(user._id);
+    next(new ErrorResponse("impossibile inviare mail", 500));
+  }
+};
 
 //Funzione per rispondere con il Token/inserirlo nel Cookie
 const sendCookieResponse = (user, res, statusCode) => {
@@ -27,21 +47,15 @@ const sendCookieResponse = (user, res, statusCode) => {
 //Access    Public
 export const createNewUser = asyncHandler(async (req, res, next) => {
   const user = await User.create(req.body);
-  const responseToken = user.createRegisterToken();
-  const resetUrl = `${req.protocol}://localhost:3000/resetpassword/${responseToken}`;
+  createAndSendValidationToken(user, req, res, 200);
+});
 
-  try {
-    await sendMail({
-      to: req.body.email,
-      subject: "Conferma Registrazione",
-      text: `conferma l'iscrizione a proShop. Link di Conferma: \n\n  ${resetUrl}`,
-    });
-    sendCookieResponse(user, res, 201);
-  } catch (error) {
-    console.log(error);
-    await User.findByIdAndRemove(user._id);
-    next(new ErrorResponse("impossibile inviare mail", 500));
-  }
+//desc      User chiede una nuova validazione
+//Route     GET /api/auth/activeuser
+//Access    Private
+export const newUserActiveValidation = asyncHandler(async (req, res, next) => {
+  const user = await User.findById(req.user.id);
+  createAndSendValidationToken(user, req, res, 200);
 });
 
 //desc      Login user
@@ -74,7 +88,6 @@ export const userLogin = asyncHandler(async (req, res, next) => {
 //Route     GET /api/auth/me
 //Access    Private
 export const getMe = asyncHandler(async (req, res, next) => {
-  console.log(req.cookies);
   try {
     const user = await User.findById(req.user.id);
     res.status(200).json({
@@ -152,4 +165,96 @@ export const logoutUser = asyncHandler(async (req, res, next) => {
       httpOnly: true,
     })
     .json({ success: true, data: {} });
+});
+
+//desc      Attiva l'utente
+//Route     GET /api/auth/activeuser/:token
+//Access    Public
+export const activeUser = asyncHandler(async (req, res, next) => {
+  const validateToken = req.params.token;
+
+  const hashedToken = crypto
+    .createHash("sha256")
+    .update(validateToken)
+    .digest("hex");
+
+  const user = await User.findOne({
+    isActiveToken: hashedToken,
+    isActiveTokenExpire: {
+      $gt: Date.now(),
+    },
+  });
+
+  if (!user) {
+    next(
+      new ErrorResponse(`Tempo di validazione scaduto, richiedine uno nuovo`)
+    );
+  }
+
+  user.isActive = true;
+  user.isActiveTokenExpire = undefined;
+  user.isActiveToken = undefined;
+  await user.save();
+
+  sendCookieResponse(user, res, 200);
+});
+
+//desc      Invia Token per resetPassword
+//Route     POST /api/auth/forgotPassword
+//Access    Public
+export const sendPasswordTokenReset = asyncHandler(async (req, res, next) => {
+  const { email } = req.body;
+  const user = await User.findOne({ email });
+  if (!user) {
+    next(new ErrorResponse("Nessun utente corrisponde a questa mail"));
+  }
+
+  const responseToken = await user.createPasswordToken();
+  const resetUrl = `${req.protocol}://localhost:3000/resetpassword/${responseToken}`;
+
+  try {
+    await sendMail({
+      to: req.body.email,
+      subject: "Resetta Password",
+      text: `Resetta la tua password: \n\n  ${resetUrl}`,
+    });
+    res.status(200).json({
+      success: true,
+    });
+  } catch (error) {
+    next(new ErrorResponse("impossibile inviare mail", 500));
+  }
+});
+
+//desc      Attiva l'utente
+//Route     PUT /api/auth/resetpassword/:token
+//Access    Public
+export const resetPassword = asyncHandler(async (req, res, next) => {
+  const validateToken = req.params.token;
+  // resetPasswordToken: String,
+  // resetPasswordTokenExpire: Date,
+  const hashedToken = crypto
+    .createHash("sha256")
+    .update(validateToken)
+    .digest("hex");
+
+  const user = await User.findOne({
+    resetPasswordToken: hashedToken,
+    resetPasswordTokenExpire: {
+      $gt: Date.now(),
+    },
+  }).select("+password");
+
+  if (!user) {
+    next(
+      new ErrorResponse(`Tempo di validazione scaduto, richiedine uno nuovo`)
+    );
+  }
+
+  user.password = req.body.newpassword;
+  user.isActiveTokenExpire = undefined;
+  user.isActiveToken = undefined;
+  await user.save();
+
+  sendCookieResponse(user, res, 200);
 });

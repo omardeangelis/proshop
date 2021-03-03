@@ -35,6 +35,8 @@ const UserSchema = new mongoose.Schema(
     },
     isActiveToken: String,
     isActiveTokenExpire: Date,
+    resetPasswordToken: String,
+    resetPasswordTokenExpire: Date,
   },
   {
     timestamps: true,
@@ -86,6 +88,19 @@ UserSchema.methods.createRegisterToken = async function () {
     .digest("hex");
 
   this.isActiveTokenExpire = new Date(Date.now() + 60 * 60 * 1000);
+  await this.save();
+
+  return responseToken;
+};
+
+UserSchema.methods.createPasswordToken = async function () {
+  const responseToken = crypto.randomBytes(20).toString("hex");
+  this.resetPasswordToken = crypto
+    .createHash("sha256")
+    .update(responseToken)
+    .digest("hex");
+
+  this.resetPasswordTokenExpire = new Date(Date.now() + 60 * 10 * 1000);
   await this.save();
 
   return responseToken;
