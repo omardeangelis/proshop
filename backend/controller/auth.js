@@ -186,7 +186,7 @@ export const activeUser = asyncHandler(async (req, res, next) => {
   });
 
   if (!user) {
-    next(
+    return next(
       new ErrorResponse(`Tempo di validazione scaduto, richiedine uno nuovo`)
     );
   }
@@ -246,7 +246,7 @@ export const resetPassword = asyncHandler(async (req, res, next) => {
   }).select("+password");
 
   if (!user) {
-    next(
+    return next(
       new ErrorResponse(`Tempo di validazione scaduto, richiedine uno nuovo`)
     );
   }

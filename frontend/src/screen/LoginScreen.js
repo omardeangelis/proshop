@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import Loading from "../components/ui/Loading";
 import { useSelector, useDispatch } from "react-redux";
 import {
   tryLoginUser,
@@ -103,11 +104,7 @@ const LoginScreen = ({ location, history }) => {
   }, [isLogin, history, redirect]);
 
   if (isLoading) {
-    return (
-      <Typography variant="h4" align="center">
-        Loading....
-      </Typography>
-    );
+    return <Loading isOpen={isLoading} />;
   }
   return (
     <Container component="main" maxWidth="xs">
@@ -162,7 +159,7 @@ const LoginScreen = ({ location, history }) => {
 
           <Grid container>
             <Grid item xs>
-              <Link href="#" variant="body2">
+              <Link component={RouterLink} to="/forgotpassword" variant="body2">
                 Forgot password?
               </Link>
             </Grid>

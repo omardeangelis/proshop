@@ -206,12 +206,12 @@ const LoginScreen = ({ location, history }) => {
 
           <Grid container>
             <Grid item xs>
-              <Link href="#" variant="body2">
+              <Link component={RouterLink} to="/forgotpassword" variant="body2">
                 Forgot password?
               </Link>
             </Grid>
             <Grid item>
-              <Link component={RouterLink} href="#" variant="body2" to="/login">
+              <Link component={RouterLink} variant="body2" to="/login">
                 {"Hai già un account?"} <u>Accedi</u>
               </Link>
             </Grid>

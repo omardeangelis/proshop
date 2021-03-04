@@ -11,7 +11,10 @@ import {
   updtateUserPasswordReducer,
 } from "./reducers/loginReducer";
 
-import { sendActivationTokenReducer } from "./reducers/validationReducers";
+import {
+  sendActivationTokenReducer,
+  profileActivationReducer,
+} from "./reducers/validationReducers";
 
 const reducer = combineReducers({
   productList: productListReducer,
@@ -22,6 +25,7 @@ const reducer = combineReducers({
   updateProfile: updateProfileReducer,
   updatePassword: updtateUserPasswordReducer,
   sendUserValidationToken: sendActivationTokenReducer,
+  validateProfileActivation: profileActivationReducer,
 });
 
 const cartItemsFromStorage = localStorage.getItem("cartItems")
@@ -36,9 +40,14 @@ const userIsAdmin = localStorage.getItem("isAdmin")
   ? JSON.parse(localStorage.getItem("isAdmin"))
   : false;
 
+const userIsActive = localStorage.getItem("isActive")
+  ? JSON.parse(localStorage.getItem("isActive"))
+  : false;
+
 const initialState = {
   cart: { cartItems: cartItemsFromStorage },
   login: { isLogin: userIsLogged, isAdmin: userIsAdmin },
+  profile: { isActive: userIsActive },
 };
 
 const middleware = [thunk];

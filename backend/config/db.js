@@ -22,7 +22,7 @@ const connectDB = async () => {
           .yellow
       );
     } catch (error) {
-      console.log(err);
+      console.log(error);
     }
   }
 };
