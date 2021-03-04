@@ -3,6 +3,8 @@ import thunk from "redux-thunk";
 import { composeWithDevTools } from "redux-devtools-extension";
 import { productListReducer } from "./reducers/productReducers";
 import { cartReducer } from "./reducers/cartReducer";
+
+//User login, logout, updateinfo e update password
 import {
   loginReducer,
   registerReducer,
@@ -11,9 +13,11 @@ import {
   updtateUserPasswordReducer,
 } from "./reducers/loginReducer";
 
+//User activation e password Reset
 import {
   sendActivationTokenReducer,
   profileActivationReducer,
+  sendPasswordTokenReducer,
 } from "./reducers/validationReducers";
 
 const reducer = combineReducers({
@@ -26,6 +30,7 @@ const reducer = combineReducers({
   updatePassword: updtateUserPasswordReducer,
   sendUserValidationToken: sendActivationTokenReducer,
   validateProfileActivation: profileActivationReducer,
+  sendPasswordToken: sendPasswordTokenReducer,
 });
 
 const cartItemsFromStorage = localStorage.getItem("cartItems")

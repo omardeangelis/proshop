@@ -1,5 +1,11 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import Loading from "../../components/ui/Loading";
 import { Link as RouterLink } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import {
+  sendPasswordTokenReset,
+  resetPasswordTokenResult,
+} from "../../reducers/actions/validationActions";
 //Material UI Import
 import Alert from "@material-ui/lab/Alert";
 import Avatar from "@material-ui/core/Avatar";
@@ -38,6 +44,10 @@ const useStyles = makeStyles((theme) => ({
 const ResetPassword = () => {
   const classes = useStyles();
   const [email, setEmail] = useState("");
+  const dispatch = useDispatch();
+  const { isLoading, error, success } = useSelector(
+    (state) => state.sendPasswordToken
+  );
 
   const handleChange = (e) => {
     setEmail(e.target.value);
@@ -45,9 +55,21 @@ const ResetPassword = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    console.log(email);
+    dispatch(sendPasswordTokenReset(email));
     setEmail("");
   };
+
+  useEffect(() => {
+    if ((error || success) && !isLoading) {
+      const timer = setTimeout(() => {
+        dispatch(resetPasswordTokenResult());
+      }, 5000);
+
+      return () => {
+        clearTimeout(timer);
+      };
+    }
+  }, [error, success, isLoading, dispatch]);
   return (
     <Container component="main" maxWidth="xs">
       <div className={classes.paper}>
@@ -64,7 +86,7 @@ const ResetPassword = () => {
             required
             fullWidth
             id="email"
-            label="Email Address"
+            label="Inserisci la tua mail"
             name="email"
             autoComplete="email"
             value={email}
@@ -94,17 +116,27 @@ const ResetPassword = () => {
               </Link>
             </Grid>
           </Grid>
-          {/* {error && (
-              <Alert
-                variant="outlined"
-                severity="error"
-                className={classes.alert}
-              >
-                {error}
-              </Alert>
-            )} */}
+          {error && (
+            <Alert
+              variant="outlined"
+              severity="error"
+              className={classes.alert}
+            >
+              {error}
+            </Alert>
+          )}
+          {success && (
+            <Alert
+              variant="outlined"
+              severity="success"
+              className={classes.alert}
+            >
+              Link per reimpostare password inviato per mail
+            </Alert>
+          )}
         </form>
       </div>
+      <Loading isOpen={isLoading} />
     </Container>
   );
 };

@@ -5,18 +5,18 @@ import {
   PROFILE_ACTIVATION_STARTED,
   PROFILE_ACTIVATION_SUCCESS,
   PROFILE_ACTIVATION_FAILED,
+  SEND_RESET_PASSWORD_TOKEN_STARTED,
+  SEND_RESET_PASSWORD_TOKEN_FAILED,
+  SEND_RESET_PASSWORD_TOKEN_SUCCESS,
+  RESET_SEND_PASSWORD_TOKEN,
 } from "../constants/validationContants";
 import axios from "axios";
 
-//   {
-//     email,
-//     password,
-//   },
-//   {
-//     headers: {
-//       "Content-Type": "application/json",
-//     },
-//   }
+const axiosConfig = {
+  headers: {
+    "Content-Type": "application/json",
+  },
+};
 
 //Invia il token di attivazione per il profilo se richeista manualmente
 export const sendActivationToken = () => async (dispatch) => {
@@ -32,6 +32,8 @@ export const sendActivationToken = () => async (dispatch) => {
   }
 };
 
+////////////////////////////////////////////////////////////////////////
+
 //Valida e attiva il profilo dell'utente anche se non è loggato
 export const profileActivation = (token) => async (dispatch) => {
   dispatch({ type: PROFILE_ACTIVATION_STARTED });
@@ -45,4 +47,25 @@ export const profileActivation = (token) => async (dispatch) => {
       payload: error.response.data.error,
     });
   }
+};
+
+////////////////////////////////////////////////////////////////////////
+
+export const sendPasswordTokenReset = (email) => async (dispatch) => {
+  dispatch({ type: SEND_RESET_PASSWORD_TOKEN_STARTED });
+  try {
+    await axios.post("/api/auth/forgotpassword", { email }, axiosConfig);
+    dispatch({ type: SEND_RESET_PASSWORD_TOKEN_SUCCESS });
+  } catch (error) {
+    dispatch({
+      type: SEND_RESET_PASSWORD_TOKEN_FAILED,
+      payload: error.response.data.error,
+    });
+  }
+};
+
+////////////////////////////////////////////////////////////////////////
+
+export const resetPasswordTokenResult = () => async (dispatch) => {
+  dispatch({ type: RESET_SEND_PASSWORD_TOKEN });
 };
