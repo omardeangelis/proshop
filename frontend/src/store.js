@@ -3,6 +3,8 @@ import thunk from "redux-thunk";
 import { composeWithDevTools } from "redux-devtools-extension";
 import { productListReducer } from "./reducers/productReducers";
 import { cartReducer } from "./reducers/cartReducer";
+
+//User login, logout, updateinfo e update password
 import {
   loginReducer,
   registerReducer,
@@ -10,6 +12,14 @@ import {
   updateProfileReducer,
   updtateUserPasswordReducer,
 } from "./reducers/loginReducer";
+
+//User activation e password Reset
+import {
+  sendActivationTokenReducer,
+  profileActivationReducer,
+  sendPasswordTokenReducer,
+  resetPasswordReducer,
+} from "./reducers/validationReducers";
 
 const reducer = combineReducers({
   productList: productListReducer,
@@ -19,6 +29,10 @@ const reducer = combineReducers({
   profile: getProfileReducer,
   updateProfile: updateProfileReducer,
   updatePassword: updtateUserPasswordReducer,
+  sendUserValidationToken: sendActivationTokenReducer,
+  validateProfileActivation: profileActivationReducer,
+  sendPasswordToken: sendPasswordTokenReducer,
+  resetPassword: resetPasswordReducer,
 });
 
 const cartItemsFromStorage = localStorage.getItem("cartItems")
@@ -33,9 +47,17 @@ const userIsAdmin = localStorage.getItem("isAdmin")
   ? JSON.parse(localStorage.getItem("isAdmin"))
   : false;
 
+const userIsActive = localStorage.getItem("isActive")
+  ? JSON.parse(localStorage.getItem("isActive"))
+  : false;
+
 const initialState = {
   cart: { cartItems: cartItemsFromStorage },
-  login: { isLogin: userIsLogged, isAdmin: userIsAdmin },
+  login: {
+    isLogin: userIsLogged,
+    isAdmin: userIsAdmin,
+  },
+  profile: { isActive: userIsActive },
 };
 
 const middleware = [thunk];

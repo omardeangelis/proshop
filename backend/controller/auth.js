@@ -39,6 +39,7 @@ const sendCookieResponse = (user, res, statusCode) => {
       success: true,
       token,
       isAdmin: user.isAdmin,
+      isActive: user.isActive,
     });
 };
 
@@ -186,7 +187,7 @@ export const activeUser = asyncHandler(async (req, res, next) => {
   });
 
   if (!user) {
-    next(
+    return next(
       new ErrorResponse(`Tempo di validazione scaduto, richiedine uno nuovo`)
     );
   }
@@ -246,7 +247,7 @@ export const resetPassword = asyncHandler(async (req, res, next) => {
   }).select("+password");
 
   if (!user) {
-    next(
+    return next(
       new ErrorResponse(`Tempo di validazione scaduto, richiedine uno nuovo`)
     );
   }
@@ -256,5 +257,7 @@ export const resetPassword = asyncHandler(async (req, res, next) => {
   user.isActiveToken = undefined;
   await user.save();
 
-  sendCookieResponse(user, res, 200);
+  res.status(200).json({
+    success: true,
+  });
 });

@@ -51,7 +51,7 @@ export const registerReducer = (state = {}, action) => {
     case REGISTER_REQUEST_STARTED:
       return { isLoading: true };
     case REGISTER_REQUEST_SUCCESS:
-      return { isLoading: false, registerError: false };
+      return { isLoading: false, success: true };
     case REGISTER_REQUEST_FAILED:
       return { isLoading: false, registerError: action.payload };
     case NEW_REGISTER_ATTEMPT:
