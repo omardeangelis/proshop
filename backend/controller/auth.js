@@ -257,5 +257,7 @@ export const resetPassword = asyncHandler(async (req, res, next) => {
   user.isActiveToken = undefined;
   await user.save();
 
-  sendCookieResponse(user, res, 200);
+  res.status(200).json({
+    success: true,
+  });
 });

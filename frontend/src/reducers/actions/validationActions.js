@@ -9,6 +9,9 @@ import {
   SEND_RESET_PASSWORD_TOKEN_FAILED,
   SEND_RESET_PASSWORD_TOKEN_SUCCESS,
   RESET_SEND_PASSWORD_TOKEN,
+  PASSWORD_RESET_STARTED,
+  PASSWORD_RESET_SUCCESS,
+  PASSWORD_RESET_FAILED,
 } from "../constants/validationContants";
 import axios from "axios";
 
@@ -68,4 +71,23 @@ export const sendPasswordTokenReset = (email) => async (dispatch) => {
 
 export const resetPasswordTokenResult = () => async (dispatch) => {
   dispatch({ type: RESET_SEND_PASSWORD_TOKEN });
+};
+
+////////////////////////////////////////////////////////////////////////
+
+export const resetUserPassword = (newpassword, token) => async (dispatch) => {
+  dispatch({ type: PASSWORD_RESET_STARTED });
+  try {
+    await axios.put(
+      `/api/auth/resetpassword/${token}`,
+      { newpassword },
+      axiosConfig
+    );
+    dispatch({ type: PASSWORD_RESET_SUCCESS });
+  } catch (error) {
+    dispatch({
+      type: PASSWORD_RESET_FAILED,
+      payload: error.response.data.error,
+    });
+  }
 };

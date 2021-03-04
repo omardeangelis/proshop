@@ -9,6 +9,7 @@ import LogoutScreen from "./screen/LogoutScreen";
 import UserProfileScreen from "./screen/UserProfileScreen";
 import SendActiveScreen from "./screen/auth/SendActiveScreen";
 import ForgotPasswordScreen from "./screen/auth/ForgotPasswordScreen";
+import ResetPasswordScreen from "./screen/auth/resetPasswordScreen";
 import Container from "@material-ui/core/Container";
 import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 
@@ -35,6 +36,11 @@ function App() {
               path="/forgotpassword"
               exact
               component={ForgotPasswordScreen}
+            />
+            <Route
+              path="/resetpassword/:token"
+              exact
+              component={ResetPasswordScreen}
             />
           </Switch>
         </Container>

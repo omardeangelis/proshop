@@ -18,6 +18,7 @@ import {
   sendActivationTokenReducer,
   profileActivationReducer,
   sendPasswordTokenReducer,
+  resetPasswordReducer,
 } from "./reducers/validationReducers";
 
 const reducer = combineReducers({
@@ -31,6 +32,7 @@ const reducer = combineReducers({
   sendUserValidationToken: sendActivationTokenReducer,
   validateProfileActivation: profileActivationReducer,
   sendPasswordToken: sendPasswordTokenReducer,
+  resetPassword: resetPasswordReducer,
 });
 
 const cartItemsFromStorage = localStorage.getItem("cartItems")

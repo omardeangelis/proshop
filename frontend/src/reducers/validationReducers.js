@@ -9,6 +9,9 @@ import {
   SEND_RESET_PASSWORD_TOKEN_SUCCESS,
   SEND_RESET_PASSWORD_TOKEN_FAILED,
   RESET_SEND_PASSWORD_TOKEN,
+  PASSWORD_RESET_STARTED,
+  PASSWORD_RESET_SUCCESS,
+  PASSWORD_RESET_FAILED,
 } from "./constants/validationContants";
 
 // Gestisce gli state per l'invio del token per attivazione profilo
@@ -63,6 +66,22 @@ export const sendPasswordTokenReducer = (
       return { isLoading: false, error: payload };
     case RESET_SEND_PASSWORD_TOKEN:
       return { ...state, error: false, success: false };
+    default:
+      return state;
+  }
+};
+
+////////////////////////////////////////////////////////////////////////
+
+// Gestisce gli state per il resetdellapassword
+export const resetPasswordReducer = (state = {}, { type, payload }) => {
+  switch (type) {
+    case PASSWORD_RESET_STARTED:
+      return { isLoading: true };
+    case PASSWORD_RESET_SUCCESS:
+      return { isLoading: false, success: true };
+    case PASSWORD_RESET_FAILED:
+      return { isLoading: false, error: payload };
     default:
       return state;
   }
