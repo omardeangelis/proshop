@@ -12,6 +12,7 @@ import {
   PASSWORD_RESET_STARTED,
   PASSWORD_RESET_SUCCESS,
   PASSWORD_RESET_FAILED,
+  RESET_PASSWORD_STATE,
 } from "../constants/validationContants";
 import axios from "axios";
 
@@ -90,4 +91,10 @@ export const resetUserPassword = (newpassword, token) => async (dispatch) => {
       payload: error.response.data.error,
     });
   }
+};
+
+////////////////////////////////////////////////////////////////////////
+
+export const resetPasswordState = () => async (dispatch) => {
+  dispatch({ type: RESET_PASSWORD_STATE });
 };

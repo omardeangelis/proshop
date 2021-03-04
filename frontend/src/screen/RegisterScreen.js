@@ -182,7 +182,7 @@ const LoginScreen = ({ location, history }) => {
             required
             fullWidth
             name="confirmPassword"
-            label="Password"
+            label="Conferma Password"
             type="password"
             id="confirmPassword"
             autoComplete="current-password"

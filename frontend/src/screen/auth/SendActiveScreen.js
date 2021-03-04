@@ -25,7 +25,6 @@ const SendActiveScreen = () => {
     (state) => state.validateProfileActivation
   );
 
-  const { user } = useSelector((state) => state.profile);
   const { token } = useParams();
   //invia mail o valida e attiva l'account dell'user
   useEffect(() => {
@@ -51,8 +50,7 @@ const SendActiveScreen = () => {
       <Wrapper maxWidth="sm">
         <Alert severity="info">
           <AlertTitle>Attivazione inviata</AlertTitle>
-          Per attivare account segui istruzioni inviate all'indirizzo{" "}
-          {user ? user.email : "La tua mail"}
+          Per attivare account segui istruzioni inviate alla tua mail{" "}
         </Alert>
       </Wrapper>
     );
@@ -78,7 +76,7 @@ const SendActiveScreen = () => {
       <Wrapper maxWidth="sm">
         <Alert severity="success">
           <AlertTitle>Attivazione completata</AlertTitle>
-          Ora puoi accedere a tutte le fuznioni
+          Ora puoi accedere a tutte le funzioni
         </Alert>
         <Button
           variant="contained"

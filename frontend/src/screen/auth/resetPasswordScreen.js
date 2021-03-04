@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import Loading from "../../components/ui/Loading";
@@ -11,7 +11,10 @@ import VpnKeyIcon from "@material-ui/icons/VpnKey";
 import Typography from "@material-ui/core/Typography";
 import { makeStyles } from "@material-ui/core/styles";
 import Container from "@material-ui/core/Container";
-import { resetUserPassword } from "../../reducers/actions/validationActions";
+import {
+  resetUserPassword,
+  resetPasswordState,
+} from "../../reducers/actions/validationActions";
 
 const useStyles = makeStyles((theme) => ({
   paper: {
@@ -71,6 +74,16 @@ const ResetPasswordScreen = () => {
       setMessage("Le password inserite non sono uguali");
     }
   };
+
+  useEffect(() => {
+    if ((success || error) && !isLoading) {
+      const timer = setTimeout(() => {
+        dispatch(resetPasswordState());
+      }, 5000);
+      return () => clearTimeout(timer);
+    }
+  }, [dispatch, isLoading, error, success]);
+
   return (
     <Container component="main" maxWidth="xs">
       <div className={classes.paper}>

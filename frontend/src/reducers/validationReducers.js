@@ -12,6 +12,7 @@ import {
   PASSWORD_RESET_STARTED,
   PASSWORD_RESET_SUCCESS,
   PASSWORD_RESET_FAILED,
+  RESET_PASSWORD_STATE,
 } from "./constants/validationContants";
 
 // Gestisce gli state per l'invio del token per attivazione profilo
@@ -82,6 +83,8 @@ export const resetPasswordReducer = (state = {}, { type, payload }) => {
       return { isLoading: false, success: true };
     case PASSWORD_RESET_FAILED:
       return { isLoading: false, error: payload };
+    case RESET_PASSWORD_STATE:
+      return { ...state, error: false, success: false };
     default:
       return state;
   }
