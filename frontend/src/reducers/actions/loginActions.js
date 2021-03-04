@@ -43,7 +43,7 @@ export const tryLoginUser = (email, password) => async (dispatch) => {
     dispatch({ type: LOGIN_REQUEST_SUCCESS, payload: data.isAdmin });
     localStorage.setItem("isLogin", "true");
     localStorage.setItem("isAdmin", JSON.stringify(data.isAdmin));
-    localStorage.setItem("isAdmin", JSON.stringify(data.isActive));
+    localStorage.setItem("isActive", JSON.stringify(data.isActive));
   } catch (error) {
     dispatch({
       type: LOGIN_REQUEST_FAILED,
@@ -63,7 +63,7 @@ export const newLoginAttempt = () => async (dispatch) => {
 export const userLogout = () => async (dispatch) => {
   await axios.get("api/auth/logout");
   dispatch({ type: USER_LOGOUT_REQUEST });
-  localStorage.clear();
+  localStorage.clear("isLogin", "isAdmin", "isActive");
 };
 
 ////////////////////////////////////////////////////////////////////////////////////////

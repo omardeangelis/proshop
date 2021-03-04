@@ -39,6 +39,7 @@ const sendCookieResponse = (user, res, statusCode) => {
       success: true,
       token,
       isAdmin: user.isAdmin,
+      isActive: user.isActive,
     });
 };
 

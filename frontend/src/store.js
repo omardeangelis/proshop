@@ -46,7 +46,10 @@ const userIsActive = localStorage.getItem("isActive")
 
 const initialState = {
   cart: { cartItems: cartItemsFromStorage },
-  login: { isLogin: userIsLogged, isAdmin: userIsAdmin },
+  login: {
+    isLogin: userIsLogged,
+    isAdmin: userIsAdmin,
+  },
   profile: { isActive: userIsActive },
 };
 
