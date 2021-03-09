@@ -1,6 +1,19 @@
 import express from "express";
-import ShippingAddress from "../models/ShippingAddress.js";
-
+import { authRouteValidator } from "../middleware/authValidator.js";
+import {
+  getUserShippingAddress,
+  createUserShippingAddress,
+  updateUserShippingAddress,
+  deleteUserShippingAddress,
+} from "../controller/shipping.js";
 const router = express.Router();
+
+router.use(authRouteValidator);
+router
+  .route("/")
+  .get(getUserShippingAddress)
+  .post(createUserShippingAddress)
+  .put(updateUserShippingAddress)
+  .delete(deleteUserShippingAddress);
 
 export default router;
