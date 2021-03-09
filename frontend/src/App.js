@@ -12,6 +12,9 @@ import ForgotPasswordScreen from "./screen/auth/ForgotPasswordScreen";
 import ResetPasswordScreen from "./screen/auth/resetPasswordScreen";
 import Container from "@material-ui/core/Container";
 import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
+import ShippingScreen from "./screen/ShippingScreen";
+import PaymentMethodScreen from "./screen/PaymentMethod";
+import PlaceOrderScreen from "./screen/PlaceOrderScreen";
 
 function App() {
   return (
@@ -42,6 +45,13 @@ function App() {
               exact
               component={ResetPasswordScreen}
             />
+            <Route path="/shipping" exact component={ShippingScreen} />
+            <Route
+              path="/paymentmethod"
+              exact
+              component={PaymentMethodScreen}
+            />
+            <Route path="/placeorder" exact component={PlaceOrderScreen} />
           </Switch>
         </Container>
       </main>
