@@ -36,7 +36,7 @@ app.use("/api/products", products);
 app.use("/api/auth", auth);
 
 //Route per ottenere shipping address
-app.use("/api/shipping", auth);
+app.use("/api/shipping", shipping);
 
 //Middleware che gestisce errori di default
 app.use(errorHandler);

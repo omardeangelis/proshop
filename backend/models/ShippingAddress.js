@@ -6,11 +6,11 @@ const ShippingAddressSchema = new mongoose.Schema({
     ref: "User",
     required: true,
   },
-  address1: {
+  indirizzo1: {
     type: String,
     required: true,
   },
-  address2: String,
+  indirizzo2: String,
   city: {
     type: String,
     required: true,
@@ -25,4 +25,9 @@ const ShippingAddressSchema = new mongoose.Schema({
   },
 });
 
-export default mongoose.model("ShippingAddress", ShippingAddressSchema);
+const ShippingAddress = mongoose.model(
+  "ShippingAddress",
+  ShippingAddressSchema
+);
+
+export default ShippingAddress;
