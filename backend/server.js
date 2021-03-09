@@ -6,6 +6,7 @@ import cookieParser from "cookie-parser";
 import morgan from "morgan";
 import products from "./routes/products.js";
 import auth from "./routes/auth.js";
+import shipping from "./routes/shipping.js";
 import errorHandler from "./middleware/errorHandler.js";
 
 //Per accedere alle env variabless
@@ -33,6 +34,9 @@ app.use("/api/products", products);
 
 //Route delegato al auht router
 app.use("/api/auth", auth);
+
+//Route per ottenere shipping address
+app.use("/api/shipping", auth);
 
 //Middleware che gestisce errori di default
 app.use(errorHandler);
