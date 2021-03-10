@@ -1,17 +1,25 @@
 import React, { useState, useEffect } from "react";
+//React Redux
 import { useSelector, useDispatch } from "react-redux";
+//React Router
 import { Link as RouterLink } from "react-router-dom";
+//Styled Components
 import styled from "styled-components";
+//Custom Component
+import AccordionContainer from "../components/ui/Accordion";
+import ShippingAddressForm from "../components/userProfile/ShippingAddress";
+//Material UI
 import Typography from "@material-ui/core/Typography";
 import PersonIcon from "@material-ui/icons/Person";
 import LockOutlinedIcon from "@material-ui/icons/LockOutlined";
+import LocalShippingIcon from "@material-ui/icons/LocalShipping";
 import Alert from "@material-ui/lab/Alert";
 import Avatar from "@material-ui/core/Avatar";
 import Button from "@material-ui/core/Button";
 import TextField from "@material-ui/core/TextField";
-import AccordionContainer from "../components/ui/Accordion";
 import { AlertTitle } from "@material-ui/lab";
 import { makeStyles } from "@material-ui/core/styles";
+//Actions
 import {
   fetchProfileData,
   resetUserProfileInfo,
@@ -20,6 +28,8 @@ import {
   updatePassword,
   passwordUpdateSuccess,
 } from "../reducers/actions/loginActions";
+
+import { shippingUpdateSuccess } from "../reducers/actions/shippingActions";
 
 const useStyles = makeStyles((theme) => ({
   paper: {
@@ -50,11 +60,19 @@ const UserProfileScreen = () => {
   const classes = useStyles();
   const dispatch = useDispatch();
   const { user } = useSelector((state) => state.profile);
+  //Update Profile Info di Base
   const { error, success: infoSuccessUpdate } = useSelector(
     (state) => state.updateProfile
   );
+
+  //Update profile password
   const { error: passwordUpdateError, success } = useSelector(
     (state) => state.updatePassword
+  );
+
+  //Update ShippingAddress
+  const { success: shippingSuccess } = useSelector(
+    (state) => state.updateShippingAddress
   );
 
   const [inputState, setInputState] = useState({
@@ -103,7 +121,9 @@ const UserProfileScreen = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [dispatch, user]);
 
+  //Chiusura accordion quando modifica è di successo
   useEffect(() => {
+    //Chiudo panel per aggiornamento info
     if (success) {
       setInputState({ ...inputState, password: "", nuovaPassword: "" });
       setChangeOpenState("passwordPanel");
@@ -115,6 +135,7 @@ const UserProfileScreen = () => {
         clearTimeout(successTimer);
       };
     }
+    //Chiudo panel per aggiornamento password
     if (infoSuccessUpdate) {
       setChangeOpenState("infoPanel");
       const successTimer = setTimeout(() => {
@@ -125,15 +146,25 @@ const UserProfileScreen = () => {
         clearTimeout(successTimer);
       };
     }
+    //Chiudo Panel aggiornamento indirizzo di spedizione
+    if (shippingSuccess) {
+      setChangeOpenState("shippingPanel");
+      const successTimer = setTimeout(() => {
+        dispatch(shippingUpdateSuccess());
+        setChangeOpenState("");
+      }, 3000);
+      return () => {
+        clearTimeout(successTimer);
+      };
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [success, infoSuccessUpdate, dispatch]);
+  }, [success, infoSuccessUpdate, dispatch, shippingSuccess]);
   return (
     <Wrapper>
       <Typography variant="h4">Il TUO PROFILO</Typography>
       <div className="user-update-container">
         <div className="user-info">
           <AccordionContainer
-            isDefaultOpen
             changeOpenState={changeOpenState === "infoPanel"}
             title="User Info"
             description={`${
@@ -261,6 +292,24 @@ const UserProfileScreen = () => {
                   Modifica
                 </Button>
               </form>
+            </div>
+          </AccordionContainer>
+
+          {/* Crea  Indirizzo di Spedizione*/}
+          <AccordionContainer
+            title="Indirizzo di Spedizione"
+            description="Modifica indirizzo di spedizione"
+            changeOpenState={changeOpenState === "shippingPanel"}
+            onClick={() => setChangeOpenState(false)}
+          >
+            <div className={classes.paper}>
+              <Avatar className={classes.avatar}>
+                <LocalShippingIcon />
+              </Avatar>
+              <Typography component="h1" variant="h5">
+                Indirizzo di Consegna
+              </Typography>
+              <ShippingAddressForm />
             </div>
           </AccordionContainer>
           {user && !user.isActive && (

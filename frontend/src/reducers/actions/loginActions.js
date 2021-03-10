@@ -63,7 +63,13 @@ export const newLoginAttempt = () => async (dispatch) => {
 export const userLogout = () => async (dispatch) => {
   await axios.get("api/auth/logout");
   dispatch({ type: USER_LOGOUT_REQUEST });
-  localStorage.clear("isLogin", "isAdmin", "isActive");
+  localStorage.clear(
+    "isLogin",
+    "isAdmin",
+    "isActive",
+    "cartItems",
+    "shippingAddress"
+  );
 };
 
 ////////////////////////////////////////////////////////////////////////////////////////

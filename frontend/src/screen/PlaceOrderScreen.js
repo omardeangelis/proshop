@@ -66,12 +66,13 @@ const useStyles = makeStyles((theme) => ({
 const PlaceOrderScreen = () => {
   const classes = useStyles();
   const { cartItems } = useSelector((state) => state.cart);
+  const {
+    shipping: { indirizzo1, city, cap, paese },
+  } = useSelector((state) => state.getShippingAddress);
   const subTotal = cartItems.length > 0 ? totalPrice(cartItems) : 0;
   const shippingTax =
     cartItems.length > 0 ? (totalPrice(cartItems) / 100).toFixed(2) : 0;
   const total = +subTotal + +shippingTax;
-
-  console.log(cartItems);
   return (
     <CheckoutContainer step={2}>
       <Grid container spacing={8} className={classes.root}>
@@ -123,8 +124,8 @@ const PlaceOrderScreen = () => {
                   email@exmple.com
                 </Typography>
               </div>
-              <Typography>Indirizzo, Citta, Cap</Typography>
-              <Typography>Paese</Typography>
+              <Typography>{`${indirizzo1}, ${city}, ${cap}`}</Typography>
+              <Typography>{paese}</Typography>
             </div>
             <Divider />
             <section>
