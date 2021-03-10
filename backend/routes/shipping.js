@@ -13,7 +13,7 @@ router
   .route("/")
   .get(getUserShippingAddress)
   .post(createUserShippingAddress)
-  .put(updateUserShippingAddress)
+  .put(updateUserShippingAddress, createUserShippingAddress)
   .delete(deleteUserShippingAddress);
 
 export default router;

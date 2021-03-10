@@ -63,15 +63,10 @@ export const createUserShippingAddress = asyncErrorHandler(
 //@Access   Privato
 export const updateUserShippingAddress = asyncErrorHandler(
   async (req, res, next) => {
-    let shipping = await ShippingAddress.find({ user: req.user.id });
+    let shipping = await ShippingAddress.findOne({ user: req.user.id });
 
     if (!shipping) {
-      return next(
-        new ErrorResponse(
-          `Utente non ha ancora un indirizzo di spedizione`,
-          400
-        )
-      );
+      return next();
     }
 
     const fieldToUpdate = { ...req.body };
