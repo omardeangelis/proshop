@@ -35,6 +35,7 @@ const PaymentMethodScreen = ({ history }) => {
   };
   const handleSubmit = (e) => {
     e.preventDefault();
+    localStorage.setItem("paymentMethod", JSON.stringify(paymentMethod));
     history.push("/placeorder");
   };
 
