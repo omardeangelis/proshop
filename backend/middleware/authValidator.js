@@ -38,11 +38,22 @@ export const authRouteValidator = asyncErrorHandler(async (req, res, next) => {
   }
 });
 
+//Controlla che user sia admin
 export const adminValidator = asyncErrorHandler(async (req, res, next) => {
   const user = await User.findById(req.user.id);
   if (user.isAdmin) {
     return next();
   } else {
-    return next(new ErrorResponse("Funzione Riservata agli admin"));
+    return next(new ErrorResponse("Funzione Riservata agli admin", 401));
+  }
+});
+
+//Controlla che user Sia attivo
+export const activeValidator = asyncErrorHandler(async (req, res, next) => {
+  const user = await User.findById(req.user.id);
+  if (user.isAdmin || user.isActive) {
+    return next();
+  } else {
+    return next(new ErrorResponse("Attiva il tuo account per procedere", 401));
   }
 });
