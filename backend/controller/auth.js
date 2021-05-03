@@ -17,7 +17,6 @@ const createAndSendValidationToken = async (user, req, res, statusCode) => {
     });
     sendCookieResponse(user, res, statusCode);
   } catch (error) {
-    console.log(error);
     await User.findByIdAndRemove(user._id);
     next(new ErrorResponse("impossibile inviare mail", 500));
   }

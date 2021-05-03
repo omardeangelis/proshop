@@ -5,7 +5,7 @@ import asyncHandler from "../middleware/asyncErrorHandler.js";
 import mongoose from "mongoose";
 
 //Trova sul database la lista di prodotti inviati dall'utente e crea
-//res.cart = {totalPrice: num, shippingPrice: num, userCart: [...{..._doc}]}
+//res.locals.cart = {totalPrice: num, shippingPrice: num, userCart: [...{..._doc}]}
 export const cartValidator = asyncHandler(async (req, res, next) => {
   const { cart } = req.body;
   //ID di prodotti presenti nel carrello
@@ -37,7 +37,7 @@ export const cartValidator = asyncHandler(async (req, res, next) => {
   );
   const shippingPrice = ((totalPrice / 100) * 1.4).toFixed(2);
   //Inserisco nella risposta il prezzo totale ed il carrello
-  res.cart = {
+  res.locals.cart = {
     totalPrice,
     userCart,
     shippingPrice,
@@ -51,14 +51,14 @@ export const cartValidator = asyncHandler(async (req, res, next) => {
 export const shippingValidator = asyncHandler(async (req, res, next) => {
   const { shippingAddress } = req.body;
   if (shippingAddress) {
-    res.shipping = shippingAddress;
+    res.locals.shipping = shippingAddress;
     next();
   } else {
     const shipping = await Shipping.findOne({ user: req.user.id });
     if (!shipping) {
       return next(new ErrorResponse(`Inserisci indirizzo di spedizione`));
     }
-    res.shipping = shipping;
+    res.locals.shipping = shipping;
     next();
   }
 });

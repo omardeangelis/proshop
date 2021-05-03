@@ -24,7 +24,13 @@ if (process.env.NODE_ENV === "development") {
   app.use(morgan("dev"));
 }
 
-app.use(express.json());
+app.use((req, res, next) => {
+  if (req.originalUrl === "/api/order/checkout/webhook") {
+    next();
+  } else {
+    express.json()(req, res, next);
+  }
+});
 
 app.use(cookieParser());
 

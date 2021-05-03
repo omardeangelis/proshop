@@ -8,6 +8,7 @@ import RadioGroup from "@material-ui/core/RadioGroup";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
 import FormControl from "@material-ui/core/FormControl";
 import FormLabel from "@material-ui/core/FormLabel";
+import Link from "@material-ui/core/Link";
 import Button from "@material-ui/core/Button";
 //React Router
 import { Link as RouterLink } from "react-router-dom";
@@ -36,7 +37,7 @@ const PaymentMethodScreen = ({ history }) => {
   const handleSubmit = (e) => {
     e.preventDefault();
     localStorage.setItem("paymentMethod", JSON.stringify(paymentMethod));
-    history.push("/placeorder");
+    // history.push("/placeorder");
   };
 
   return (
@@ -71,6 +72,8 @@ const PaymentMethodScreen = ({ history }) => {
               color="primary"
               type="submit"
               className="btn"
+              component={Link}
+              href={"/placeorder"}
             >
               conferma
             </Button>
