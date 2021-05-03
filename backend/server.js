@@ -4,9 +4,12 @@ import connectDB from "./config/db.js";
 import colors from "colors";
 import cookieParser from "cookie-parser";
 import morgan from "morgan";
+//Route
 import products from "./routes/products.js";
 import auth from "./routes/auth.js";
 import shipping from "./routes/shipping.js";
+import order from "./routes/order.js";
+//Midlleware
 import errorHandler from "./middleware/errorHandler.js";
 
 //Per accedere alle env variabless
@@ -21,7 +24,13 @@ if (process.env.NODE_ENV === "development") {
   app.use(morgan("dev"));
 }
 
-app.use(express.json());
+app.use((req, res, next) => {
+  if (req.originalUrl === "/api/order/checkout/webhook") {
+    next();
+  } else {
+    express.json()(req, res, next);
+  }
+});
 
 app.use(cookieParser());
 
@@ -37,6 +46,9 @@ app.use("/api/auth", auth);
 
 //Route per ottenere shipping address
 app.use("/api/shipping", shipping);
+
+//Route per gestire gli ordini
+app.use("/api/order", order);
 
 //Middleware che gestisce errori di default
 app.use(errorHandler);

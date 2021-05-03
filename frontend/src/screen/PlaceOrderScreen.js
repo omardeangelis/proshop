@@ -1,12 +1,14 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 //Custom Component & functions
 import CheckoutContainer from "../components/checkout/CheckoutContainer";
 import { totalPrice } from "../utils/helpers";
+import { createNewOrder } from "../reducers/actions/orderActions";
 //React-router-dom
 import { Link as RouterLink } from "react-router-dom";
 //React-Redux
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 //Material UI
+import Alert from "@material-ui/lab/Alert";
 import { makeStyles } from "@material-ui/core/styles";
 import Grid from "@material-ui/core/Grid";
 import List from "@material-ui/core/List";
@@ -65,14 +67,43 @@ const useStyles = makeStyles((theme) => ({
 
 const PlaceOrderScreen = () => {
   const classes = useStyles();
+  const [message, setMessage] = useState("");
   const { cartItems } = useSelector((state) => state.cart);
+  const dispatch = useDispatch();
+
   const {
     shipping: { indirizzo1, city, cap, paese },
   } = useSelector((state) => state.getShippingAddress);
+
   const subTotal = cartItems.length > 0 ? totalPrice(cartItems) : 0;
+
   const shippingTax =
     cartItems.length > 0 ? (totalPrice(cartItems) / 100).toFixed(2) : 0;
   const total = +subTotal + +shippingTax;
+
+  const handleClick = async (event) => {
+    dispatch(createNewOrder());
+  };
+
+  useEffect(() => {
+    // Check to see if this is a redirect back from Checkout
+    const query = new URLSearchParams(window.location.search);
+    if (query.get("success")) {
+      setMessage("Order placed! You will receive an email confirmation.");
+    }
+    if (query.get("canceled")) {
+      setMessage(
+        "Order canceled -- continue to shop around and checkout when you're ready."
+      );
+    }
+  }, []);
+  if (message) {
+    return (
+      <Alert variant="filled" color="info">
+        {message}
+      </Alert>
+    );
+  }
   return (
     <CheckoutContainer step={2}>
       <Grid container spacing={8} className={classes.root}>
@@ -155,6 +186,10 @@ const PlaceOrderScreen = () => {
                 </Button>
                 <Button
                   variant="contained"
+                  type="button"
+                  id="checkout-button"
+                  role="link"
+                  onClick={handleClick}
                   color="primary"
                   className={`btn`}
                   fullwidth

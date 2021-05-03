@@ -2,6 +2,7 @@ import {
   ADD_PRODUCT_TO_CART,
   REMOVE_PRODUCT_FROM_CART,
   TOGGLE_CART_ITEM_QTY,
+  REMOVE_ALL_FROM_CART,
 } from "../constants/cartConstants";
 import axios from "axios";
 
@@ -36,4 +37,10 @@ export const toggleCartItemQty = (_id, type = "add") => async (
 ) => {
   dispatch({ type: TOGGLE_CART_ITEM_QTY, payload: { _id, type } });
   localStorage.setItem("cartItems", JSON.stringify(getState().cart.cartItems));
+};
+
+//Svuota il Carrello
+export const removeAllFromCart = () => async (dispatch) => {
+  dispatch({ type: REMOVE_ALL_FROM_CART });
+  localStorage.removeItem("cartItems");
 };

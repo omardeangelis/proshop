@@ -28,6 +28,9 @@ import {
   updateShippingAddressReducer,
 } from "./reducers/shippingReducer";
 
+//Order Reducer
+import { createOrderReducer } from "./reducers/orderReducer";
+
 const reducer = combineReducers({
   productList: productListReducer,
   cart: cartReducer,
@@ -43,6 +46,7 @@ const reducer = combineReducers({
   validateProfileActivation: profileActivationReducer,
   sendPasswordToken: sendPasswordTokenReducer,
   resetPassword: resetPasswordReducer,
+  order: createOrderReducer,
 });
 
 const cartItemsFromStorage = localStorage.getItem("cartItems")
