@@ -8,6 +8,7 @@ import styled from "styled-components";
 //Custom Component
 import AccordionContainer from "../components/ui/Accordion";
 import ShippingAddressForm from "../components/userProfile/ShippingAddress";
+import UserOrder from "../components/userProfile/UserOrder";
 //Material UI
 import Typography from "@material-ui/core/Typography";
 import PersonIcon from "@material-ui/icons/Person";
@@ -122,6 +123,10 @@ const UserProfileScreen = () => {
   }, [dispatch, user]);
 
   //Chiusura accordion quando modifica è di successo
+  /**
+   * @todo REFACTORING: inserire un data-field sul Accordion e usare
+   *                    target object
+   */
   useEffect(() => {
     //Chiudo panel per aggiornamento info
     if (success) {
@@ -161,9 +166,9 @@ const UserProfileScreen = () => {
   }, [success, infoSuccessUpdate, dispatch, shippingSuccess]);
   return (
     <Wrapper>
-      <Typography variant="h4">Il TUO PROFILO</Typography>
       <div className="user-update-container">
         <div className="user-info">
+          <Typography variant="h4">Il TUO PROFILO</Typography>
           <AccordionContainer
             changeOpenState={changeOpenState === "infoPanel"}
             title="User Info"
@@ -325,7 +330,10 @@ const UserProfileScreen = () => {
             </Alert>
           )}
         </div>
-        <div className="user-actions">b</div>
+        <div className="user-actions">
+          <Typography variant="h4">I Tuoi Ordini</Typography>
+          <UserOrder />
+        </div>
       </div>
     </Wrapper>
   );
@@ -339,9 +347,11 @@ const Wrapper = styled.section`
     grid-template-columns: 1.5fr 2fr;
     gap: 4rem;
   }
-  .user-info {
+  .user-info,
+  .user-actions {
     display: grid;
     gap: 2rem;
+    height: fit-content;
   }
 `;
 

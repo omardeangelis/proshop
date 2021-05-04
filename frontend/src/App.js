@@ -15,6 +15,7 @@ import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 import ShippingScreen from "./screen/ShippingScreen";
 import PaymentMethodScreen from "./screen/PaymentMethod";
 import PlaceOrderScreen from "./screen/PlaceOrderScreen";
+import SingleOrderScreen from "./screen/SingleOrderScreen";
 
 function App() {
   return (
@@ -52,6 +53,7 @@ function App() {
               component={PaymentMethodScreen}
             />
             <Route path="/placeorder" exact component={PlaceOrderScreen} />
+            <Route path="/order/:id" exact component={SingleOrderScreen} />
           </Switch>
         </Container>
       </main>
