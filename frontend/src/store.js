@@ -29,7 +29,10 @@ import {
 } from "./reducers/shippingReducer";
 
 //Order Reducer
-import { createOrderReducer } from "./reducers/orderReducer";
+import {
+  createOrderReducer,
+  getUserOrderReducer,
+} from "./reducers/orderReducer";
 
 const reducer = combineReducers({
   productList: productListReducer,
@@ -47,6 +50,7 @@ const reducer = combineReducers({
   sendPasswordToken: sendPasswordTokenReducer,
   resetPassword: resetPasswordReducer,
   order: createOrderReducer,
+  orderList: getUserOrderReducer,
 });
 
 const cartItemsFromStorage = localStorage.getItem("cartItems")

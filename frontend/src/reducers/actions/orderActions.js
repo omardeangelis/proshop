@@ -2,9 +2,15 @@ import {
   PLACE_ORDER_START,
   PLACE_ORDER_SUCCESS,
   PLACE_ORDER_FAILED,
+  GET_MY_ORDERS_START,
+  GET_MY_ORDERS_SUCCESS,
+  GET_MY_ORDERS_FAILED,
 } from "../constants/orderConstants";
 //Axios
 import axios from "axios";
+
+//Utils
+import { paginator } from "../../utils/helpers";
 // Stripe
 import { loadStripe } from "@stripe/stripe-js";
 const stripePromise = loadStripe(
@@ -37,6 +43,23 @@ export const createNewOrder = () => async (dispatch, getState) => {
   } catch (error) {
     dispatch({
       type: PLACE_ORDER_FAILED,
+      payload: error.response.data.error,
+    });
+  }
+};
+
+//Ritorna tutti gli ordini dell'utente
+export const getAllUserOrders = () => async (dispatch) => {
+  dispatch({ type: GET_MY_ORDERS_START });
+  try {
+    const response = await axios.get(`api/order/myorder`);
+    dispatch({
+      type: GET_MY_ORDERS_SUCCESS,
+      payload: paginator(response.data.data),
+    });
+  } catch (error) {
+    dispatch({
+      type: GET_MY_ORDERS_FAILED,
       payload: error.response.data.error,
     });
   }
