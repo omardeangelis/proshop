@@ -260,3 +260,77 @@ export const resetPassword = asyncHandler(async (req, res, next) => {
     success: true,
   });
 });
+
+//desc      Fornisce la lista di tutti gli utenti
+//Route     GET /api/auth/users
+//Access    Privato/Admin
+export const getAllUsers = asyncHandler(async (req, res, next) => {
+  const users = await User.find({});
+
+  if (!users) {
+    return next(
+      new ErrorResponse("Problema con il caricamento degli utenti", 500)
+    );
+  }
+  res.status(200).json(users);
+});
+
+//desc      elimina user
+//Route     DELETE /api/auth/user/:id
+//Access    Privato/Admin
+export const deleteUserByAdmin = asyncHandler(async (req, res, next) => {
+  const user = await User.findById(req.params.id);
+
+  if (!user) {
+    return next(new ErrorResponse("Utente non trovato già eliminato", 404));
+  } else {
+    await User.findByIdAndDelete(req.params.id);
+    res.status(200).json({
+      success: true,
+      data: {},
+    });
+  }
+});
+
+//desc      Modifica user
+//Route     PUT /api/auth/user/:id
+//Access    Privato/Admin
+export const updateUserByAdmin = asyncHandler(async (req, res, next) => {
+  let user = await User.findById(req.params.id);
+
+  const fieldToUpdate = { ...req.body };
+  for (const [key, value] of Object.values(fieldToUpdate)) {
+    if (!value) {
+      delete fieldToUpdate[key];
+    }
+  }
+
+  if (!user) {
+    return next(new ErrorResponse("L'utente non esiste", 404));
+  } else {
+    user = await User.findByIdAndUpdate(
+      req.params.id,
+      { $set: { ...fieldToUpdate } },
+      { new: true, runValidators: true }
+    );
+    return res.status(200).json({
+      success: true,
+      data: user,
+    });
+  }
+});
+
+//desc      ottiene informazioni user
+//Route     GET /api/auth/user/:id
+//Access    Privato/Admin
+export const getUserByAdmin = asyncHandler(async (req, res, next) => {
+  const user = await User.findById(req.params.id);
+
+  if (!user) {
+    return next(new ErrorResponse("L'utente non esiste", 404));
+  }
+  res.status(200).json({
+    success: true,
+    data: user,
+  });
+});
