@@ -5,7 +5,7 @@ const useFetch = (url) => {
   const [data, setData] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
 
-  const getProducts = async (url) => {
+  const getData = async (url) => {
     setIsLoading(true);
     try {
       const {
@@ -20,7 +20,7 @@ const useFetch = (url) => {
   };
 
   useEffect(() => {
-    getProducts(url);
+    getData(url);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 

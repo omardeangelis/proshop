@@ -6,7 +6,6 @@ import AccordionSummary from "@material-ui/core/AccordionSummary";
 import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
 import Box from "@material-ui/core/Box";
 import { makeStyles } from "@material-ui/core/styles";
-
 const useStyles = makeStyles((theme) => ({
   heading: {
     fontSize: theme.typography.pxToRem(15),
@@ -15,6 +14,9 @@ const useStyles = makeStyles((theme) => ({
   },
   success: {
     backgroundColor: "var(--green-a-100)",
+  },
+  accordionDetails: {
+    display: "block",
   },
 }));
 
@@ -43,13 +45,15 @@ const AccordionContainer = ({
         onClick={() => setIsExpand(!isExpand)}
       >
         <Box>
-          <Typography className={classes.heading}> {title}</Typography>
+          <Box className={classes.heading}> {title}</Box>
           <Typography variant="body2" color="textSecondary">
             {description}
           </Typography>
         </Box>
       </AccordionSummary>
-      <AccordionDetails>{children}</AccordionDetails>
+      <AccordionDetails className={classes.accordionDetails}>
+        {children}
+      </AccordionDetails>
     </Accordion>
   );
 };
