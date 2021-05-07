@@ -305,6 +305,12 @@ export const updateUserByAdmin = asyncHandler(async (req, res, next) => {
     }
   }
 
+  if (!fieldToUpdate) {
+    return next(
+      new ErrorResponse("Inserisci almento un campo da modificare", 400)
+    );
+  }
+
   if (!user) {
     return next(new ErrorResponse("L'utente non esiste", 404));
   } else {
