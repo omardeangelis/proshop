@@ -16,6 +16,7 @@ import ShippingScreen from "./screen/ShippingScreen";
 import PaymentMethodScreen from "./screen/PaymentMethod";
 import PlaceOrderScreen from "./screen/PlaceOrderScreen";
 import SingleOrderScreen from "./screen/SingleOrderScreen";
+import AdminScreen from "./screen/admin/AdminScreen";
 
 function App() {
   return (
@@ -54,6 +55,7 @@ function App() {
             />
             <Route path="/placeorder" exact component={PlaceOrderScreen} />
             <Route path="/order/:id" exact component={SingleOrderScreen} />
+            <Route path="/admin" component={AdminScreen} />
           </Switch>
         </Container>
       </main>

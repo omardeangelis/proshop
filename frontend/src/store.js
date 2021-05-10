@@ -34,23 +34,39 @@ import {
   getUserOrderReducer,
 } from "./reducers/orderReducer";
 
+//Admin Reducer
+import {
+  getUserListReducer,
+  deleteUserReducer,
+  updateUserByAdminReducer,
+} from "./reducers/adminReducer";
+
 const reducer = combineReducers({
+  //Prodotti e carrello
   productList: productListReducer,
   cart: cartReducer,
+  //User CRUD
   login: loginReducer,
   register: registerReducer,
   profile: getProfileReducer,
   updateProfile: updateProfileReducer,
   updatePassword: updtateUserPasswordReducer,
+  //Shipping CRUD
   getShippingAddress: getShippingAddressReducer,
   newShippingAddress: createShippingAddressReducer,
   updateShippingAddress: updateShippingAddressReducer,
+  //User Validation
   sendUserValidationToken: sendActivationTokenReducer,
   validateProfileActivation: profileActivationReducer,
   sendPasswordToken: sendPasswordTokenReducer,
   resetPassword: resetPasswordReducer,
+  //Order CRUD
   order: createOrderReducer,
   orderList: getUserOrderReducer,
+  // Admin Func
+  getUserList: getUserListReducer,
+  deleteUser: deleteUserReducer,
+  updateUser: updateUserByAdminReducer,
 });
 
 const cartItemsFromStorage = localStorage.getItem("cartItems")
