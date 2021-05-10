@@ -25,6 +25,7 @@ const useStyles = makeStyles((theme) => ({
   },
   appBar: {
     padding: "1rem 0rem",
+    zIndex: theme.zIndex.drawer + 1,
   },
   toolBar: {
     padding: "0",
@@ -60,7 +61,7 @@ const Header = () => {
 
   return (
     <header>
-      <AppBar position="static" color="primary" className={classes.appBar}>
+      <AppBar position="relative" color="primary" className={classes.appBar}>
         <Container maxWidth="lg">
           <Toolbar className={classes.toolBar}>
             <div className="menu-button">
