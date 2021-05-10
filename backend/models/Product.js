@@ -32,6 +32,10 @@ const ProductSchema = new mongoose.Schema(
       required: true,
       ref: "User",
     },
+    isDeleted: {
+      type: Boolean,
+      default: false,
+    },
     rating: {
       type: Number,
       default: 0,
