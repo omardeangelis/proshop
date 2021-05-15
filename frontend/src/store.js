@@ -1,7 +1,7 @@
 import { createStore, combineReducers, applyMiddleware } from "redux";
 import thunk from "redux-thunk";
 import { composeWithDevTools } from "redux-devtools-extension";
-import { productListReducer } from "./reducers/productReducers";
+import { productListReducer, updateReducer } from "./reducers/productReducers";
 import { cartReducer } from "./reducers/cartReducer";
 
 //User login, logout, updateinfo e update password
@@ -44,6 +44,7 @@ import {
 const reducer = combineReducers({
   //Prodotti e carrello
   productList: productListReducer,
+  updateProduct: updateReducer,
   cart: cartReducer,
   //User CRUD
   login: loginReducer,

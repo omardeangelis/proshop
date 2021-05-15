@@ -58,12 +58,11 @@ export const createProductByAdmin = asyncHandler(async (req, res, next) => {
 //Access    Private/Admin
 export const updateProduct = asyncHandler(async (req, res, next) => {
   const fieldToUpdate = { ...req.body };
-  for (const [key, value] of Object.values(fieldToUpdate)) {
+  for (const [key, value] of Object.entries(fieldToUpdate)) {
     if (!value) {
       delete fieldToUpdate[key];
     }
   }
-
   if (!fieldToUpdate) {
     return next(
       new ErrorResponse("Inserisci almento un campo da modificare", 400)

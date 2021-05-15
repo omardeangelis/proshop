@@ -3,6 +3,10 @@ import {
   PRODUCT_LIST_SUCCESS,
   PRODUCT_LIST_REQUEST,
   CLEAN_PRODUCT_LIST,
+  UPDATE_PRODUCT_START,
+  UPDATE_PRODUCT_SUCCESS,
+  UPDATE_PRODUCT_FAILED,
+  UPDATE_PRODUCT_RESET,
 } from "./constants/productListConst";
 
 export const productListReducer = (
@@ -22,6 +26,21 @@ export const productListReducer = (
     //pulisce la lista dei prodotti
     case CLEAN_PRODUCT_LIST:
       return { isLoading: true, products: [], error: false };
+    default:
+      return state;
+  }
+};
+
+export const updateReducer = (state = {}, { type, payload }) => {
+  switch (type) {
+    case UPDATE_PRODUCT_START:
+      return { isLoading: true };
+    case UPDATE_PRODUCT_SUCCESS:
+      return { isLoading: false, success: true };
+    case UPDATE_PRODUCT_FAILED:
+      return { isLoading: false, error: payload };
+    case UPDATE_PRODUCT_RESET:
+      return { ...state, success: false, error: false };
     default:
       return state;
   }
