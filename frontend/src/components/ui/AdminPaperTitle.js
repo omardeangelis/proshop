@@ -13,6 +13,9 @@ const useStyles = makeStyles((theme) => ({
     textTransform: "lowercase",
     fontVariant: "small-caps",
   },
+  description: {
+    maxWidth: "75ch",
+  },
 }));
 
 const AdminPaperTitle = ({ title, description }) => {
@@ -23,7 +26,11 @@ const AdminPaperTitle = ({ title, description }) => {
       <Typography variant="h5" component="h2" className={classes.title}>
         {title}
       </Typography>
-      <Typography variant="subtitle2" color="textSecondary">
+      <Typography
+        variant="subtitle2"
+        color="textSecondary"
+        className={classes.description}
+      >
         {description}
       </Typography>
     </>

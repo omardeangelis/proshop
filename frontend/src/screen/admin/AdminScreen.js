@@ -2,7 +2,7 @@ import React, { useRef } from "react";
 import AdminBar from "../../components/ui/AdminBar";
 import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 import DashboardScreen from "./DashboardScreen";
-import UserListSceeen from "./UserListSceeen";
+import UserListScreen from "./UserListScreen";
 //Material Ui
 import { makeStyles } from "@material-ui/core/styles";
 import Paper from "@material-ui/core/Paper";
@@ -11,6 +11,8 @@ import Box from "@material-ui/core/Box";
 //React Redux
 import { useSelector } from "react-redux";
 import SingleUserScreen from "./SingleUserScreen";
+import ProductListScreen from "./ProductListScreen";
+import SingleProductScreen from "./SingleProductScreen";
 const useStyles = makeStyles((theme) => ({
   paper: {
     minHeight: "60vh",
@@ -58,11 +60,21 @@ const AdminScreen = ({ match: { path }, history }) => {
           <Route path={`${path}`} exact component={DashboardScreen} />
           <Paper className={classes.paper}>
             <Box className={classes.box}>
-              <Route path={`${path}/users`} exact component={UserListSceeen} />
+              <Route path={`${path}/users`} exact component={UserListScreen} />
               <Route
                 path={`${path}/user/:id/edit`}
                 exact
                 component={SingleUserScreen}
+              />
+              <Route
+                path={`${path}/products`}
+                exact
+                component={ProductListScreen}
+              />
+              <Route
+                path={`${path}/product/:id/edit`}
+                exact
+                component={SingleProductScreen}
               />
             </Box>
           </Paper>
