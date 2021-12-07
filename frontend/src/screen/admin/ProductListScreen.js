@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import React, { useEffect } from "react";
 //Custom Components
 import AdminPaperTitle from "../../components/ui/AdminPaperTitle";
@@ -6,7 +7,6 @@ import Loading from "../../components/ui/Loading";
 import { formatPrice } from "../../utils/helpers";
 //Material UI
 import { makeStyles } from "@material-ui/core/styles";
-import Typography from "@material-ui/core/Typography";
 import { indigo, red } from "@material-ui/core/colors";
 import Box from "@material-ui/core/Box";
 import Table from "@material-ui/core/Table";
@@ -27,11 +27,14 @@ import AddIcon from "@material-ui/icons/Add";
 //React Redux
 import { useDispatch, useSelector } from "react-redux";
 //Router Dom
-import { Link as RouterLink } from "react-router-dom";
+import { Link as RouterLink, useHistory } from "react-router-dom";
 //Actions
 import {
   listProduct,
   cleanProductList,
+  setProductAsDeleted,
+  resetDeleteProductState,
+  createNewProduct,
 } from "../../reducers/actions/productListActions";
 
 const useStyles = makeStyles((theme) => ({
@@ -49,18 +52,52 @@ const useStyles = makeStyles((theme) => ({
 const ProductListScreen = () => {
   const classes = useStyles();
   const dispatch = useDispatch();
+  const history = useHistory();
+
+  //Reducer per lista prodotto
   const { isLoading, products, error } = useSelector(
     (state) => state.productList
   );
 
-  const removeProduct = (id) => {
-    console.log("rimosso");
+  //Reducer per cancellare Prodotto
+  const {
+    isLoading: deleteLoading,
+    success: deleteSuccess,
+    error: deleteError,
+  } = useSelector((state) => state.deleteProduct);
+
+  //Reducer per creare nuovo prodotto
+  const {
+    isLoading: createLoading,
+    product_id,
+    success: createSuccess,
+    error: createError,
+  } = useSelector((state) => state.createProduct);
+
+  const removeProduct = (_id) => {
+    dispatch(setProductAsDeleted(_id));
+  };
+
+  const handleCreate = () => {
+    dispatch(createNewProduct());
   };
 
   useEffect(() => {
-    dispatch(listProduct());
-    return () => dispatch(cleanProductList());
-  }, [dispatch]);
+    if (!products || products.length === 0 || deleteSuccess)
+      dispatch(listProduct());
+    return () => {
+      dispatch(cleanProductList());
+      if (deleteSuccess) {
+        dispatch(resetDeleteProductState());
+      }
+    };
+  }, [dispatch, deleteSuccess]);
+
+  useEffect(() => {
+    if (createSuccess) {
+      history.push(`/admin/product/${product_id}/edit`);
+    }
+  }, [createSuccess]);
   return (
     <Box>
       <Grid container justify="space-between" spacing={4}>
@@ -71,7 +108,12 @@ const ProductListScreen = () => {
           />
         </Grid>
         <Grid item xs={12} sm={3}>
-          <Button startIcon={<AddIcon />} variant="contained" color="primary">
+          <Button
+            startIcon={<AddIcon />}
+            variant="contained"
+            color="primary"
+            onClick={handleCreate}
+          >
             Nuovo Prodotto
           </Button>
         </Grid>
@@ -91,10 +133,10 @@ const ProductListScreen = () => {
           </TableHead>
           {isLoading ? (
             <h5>
-              <Loading isOpen={isLoading} />
+              <Loading isOpen={isLoading || deleteLoading || createLoading} />
             </h5>
-          ) : error ? (
-            <h5>{error}</h5>
+          ) : error || deleteError || createError ? (
+            <h5>{error || deleteError || createError}</h5>
           ) : (
             <TableBody>
               {products.map((row) => (

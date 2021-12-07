@@ -4,6 +4,7 @@ import { useParams } from "react-router-dom";
 //React Redux
 import { useSelector, useDispatch } from "react-redux";
 //Material UI
+import Image from "material-ui-image";
 import { makeStyles } from "@material-ui/core/styles";
 import Container from "@material-ui/core/Container/Container";
 import Box from "@material-ui/core/Box";
@@ -12,6 +13,7 @@ import Grid from "@material-ui/core/Grid";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
 import Checkbox from "@material-ui/core/Checkbox";
 import OutlinedInput from "@material-ui/core/OutlinedInput";
+import Input from "@material-ui/core/Input";
 import FormHelperText from "@material-ui/core/FormHelperText";
 import FormControl from "@material-ui/core/FormControl";
 import Divider from "@material-ui/core/Divider";
@@ -38,6 +40,11 @@ const useStyles = makeStyles((theme) => ({
     width: "100%",
     gap: "1rem",
   },
+  image: {
+    width: 125,
+    height: 125,
+    position: "relative",
+  },
   btnGruop: {
     marginTop: "1rem",
     display: "flex",
@@ -55,7 +62,7 @@ const SingleProductScreen = () => {
   const dispatch = useDispatch();
   const {
     isLoading: updateLoading,
-    success: updateSuccess,
+    // success: updateSuccess,
     error: updateError,
   } = useSelector((state) => state.updateProduct);
   const [input, setInput] = useState({
@@ -190,19 +197,43 @@ const SingleProductScreen = () => {
             </Grid>
           </Grid>
           <Grid item xs={12} md={6}>
-            <FormControl>
-              <FormHelperText>Disponibilità </FormHelperText>
-              <FormControlLabel
-                label="Disponibile nello store"
-                control={
-                  <Checkbox
-                    checked={!checked}
-                    onChange={() => setChecked(!checked)}
-                    color="primary"
+            <Grid container>
+              <Grid item xs={12}>
+                <FormControl>
+                  <FormHelperText>Disponibilità </FormHelperText>
+                  <FormControlLabel
+                    label="Disponibile nello store"
+                    control={
+                      <Checkbox
+                        checked={!checked}
+                        onChange={() => setChecked(!checked)}
+                        color="primary"
+                      />
+                    }
                   />
-                }
-              />
-            </FormControl>
+                </FormControl>
+              </Grid>
+              <Grid item xs={12}>
+                <Grid container alignItems="flex-end" spacing={3}>
+                  <Grid item xs={4}>
+                    <FormHelperText>Immagine Prodotto</FormHelperText>
+                    <Box className={classes.image}>
+                      <Image src={data.image}></Image>
+                    </Box>
+                  </Grid>
+                  <Grid item xs={7}>
+                    <Input
+                      variant="outlined"
+                      color="primary"
+                      size="small"
+                      type="file"
+                    >
+                      Cambia Immagine
+                    </Input>
+                  </Grid>
+                </Grid>
+              </Grid>
+            </Grid>
           </Grid>
         </Grid>
         <Box className={classes.btnGruop}>

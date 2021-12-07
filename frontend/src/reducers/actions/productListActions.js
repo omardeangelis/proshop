@@ -7,6 +7,13 @@ import {
   UPDATE_PRODUCT_SUCCESS,
   UPDATE_PRODUCT_FAILED,
   UPDATE_PRODUCT_RESET,
+  DELETE_PRODUCT_START,
+  DELETE_PRODUCT_SUCCESS,
+  DELETE_PRODUCT_FAILED,
+  DELETE_PRODUCT_RESET,
+  CREATE_PRODUCT_START,
+  CREATE_PRODUCT_FAILED,
+  CREATE_PRODUCT_SUCCESS,
 } from "../constants/productListConst";
 import axios from "axios";
 
@@ -44,11 +51,10 @@ export const updateProductById = (_id, data) => async (dispatch) => {
         name: data.name,
         description: data.description,
         price: data.price,
-        // countInStock: JSON.stringify(data.countInStock),
-        // rating: Number(data.rating),
-        // category: data.category,
+        countInStock: data.countInStock,
+        category: data.category,
         brand: data.brand,
-        // isDeleted: JSON.stringify(data.isDeleted),
+        isDeleted: JSON.stringify(data.isDeleted),
       },
       {
         headers: {
@@ -70,4 +76,44 @@ export const updateProductById = (_id, data) => async (dispatch) => {
 
 export const resetUpdateProductState = () => async (dispatch) => {
   dispatch({ type: UPDATE_PRODUCT_RESET });
+};
+
+export const setProductAsDeleted = (_id) => async (dispatch) => {
+  dispatch({ type: DELETE_PRODUCT_START });
+  try {
+    await axios.delete(`/api/products/${_id}`);
+    dispatch({ type: DELETE_PRODUCT_SUCCESS });
+  } catch (error) {
+    dispatch({
+      type: DELETE_PRODUCT_FAILED,
+      payload:
+        error.response && error.response.data.message
+          ? error.response.data.message
+          : error.message,
+    });
+  }
+};
+
+export const resetDeleteProductState = () => async (dispatch) => {
+  dispatch({ type: DELETE_PRODUCT_RESET });
+};
+
+export const createNewProduct = () => async (dispatch) => {
+  dispatch({ type: CREATE_PRODUCT_START });
+  try {
+    const response = await axios.post(
+      "/api/products",
+      {},
+      { headers: { "Content-Type": "application/json" } }
+    );
+    dispatch({ type: CREATE_PRODUCT_SUCCESS, payload: response.data.data._id });
+  } catch (error) {
+    dispatch({
+      type: CREATE_PRODUCT_FAILED,
+      payload:
+        error.response && error.response.data.message
+          ? error.response.data.message
+          : error.message,
+    });
+  }
 };

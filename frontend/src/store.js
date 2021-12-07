@@ -1,7 +1,14 @@
 import { createStore, combineReducers, applyMiddleware } from "redux";
 import thunk from "redux-thunk";
 import { composeWithDevTools } from "redux-devtools-extension";
-import { productListReducer, updateReducer } from "./reducers/productReducers";
+//Product Reducer
+import {
+  deleteProductReducer,
+  productListReducer,
+  updateReducer,
+  createProductReducer,
+} from "./reducers/productReducers";
+//Cart Reducer
 import { cartReducer } from "./reducers/cartReducer";
 
 //User login, logout, updateinfo e update password
@@ -42,9 +49,12 @@ import {
 } from "./reducers/adminReducer";
 
 const reducer = combineReducers({
-  //Prodotti e carrello
+  //Prodotti
   productList: productListReducer,
   updateProduct: updateReducer,
+  deleteProduct: deleteProductReducer,
+  createProduct: createProductReducer,
+  //Cart
   cart: cartReducer,
   //User CRUD
   login: loginReducer,
